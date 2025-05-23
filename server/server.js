@@ -14,6 +14,10 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
+    // Render domains
+    /https:\/\/.*\.onrender\.com$/,
+    // Railway domains
+    /https:\/\/.*\.railway\.app$/,
     // Netlify domains (will match any Netlify subdomain)
     /https:\/\/.*\.netlify\.app$/,
     /https:\/\/.*\.netlify\.com$/,
