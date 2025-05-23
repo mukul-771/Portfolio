@@ -1,23 +1,9 @@
 import {
-  collection,
-  doc,
-  getDocs,
-  getDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  Timestamp
-} from 'firebase/firestore';
-import {
   ref,
   uploadBytes,
   getDownloadURL
 } from 'firebase/storage';
-import { db, storage } from '../config/firebase';
+import { storage } from '../config/firebase';
 import type { Project, GlobalImageSettings } from '../types/project';
 
 // Helper function to handle API responses
@@ -40,20 +26,13 @@ export const projectApi = {
   // Get all projects
   getAll: async (): Promise<Project[]> => {
     try {
-      const projectsRef = collection(db, 'projects');
-      const querySnapshot = await getDocs(query(projectsRef, orderBy('createdAt', 'desc')));
-
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
-          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as unknown as Project;
-      });
+      const response = await fetch('/api/projects');
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects');
+      }
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error fetching projects:', error);
       return [];
     }
   },
@@ -61,22 +40,16 @@ export const projectApi = {
   // Get project by ID
   getById: async (id: string): Promise<Project | null> => {
     try {
-      const projectRef = doc(db, 'projects', id);
-      const projectSnap = await getDoc(projectRef);
-
-      if (!projectSnap.exists()) {
-        return null;
+      const response = await fetch(`/api/projects?id=${id}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error('Failed to fetch project');
       }
-
-      const data = projectSnap.data();
-      return {
-        id: projectSnap.id,
-        ...data,
-        createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
-        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-      } as unknown as Project;
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error fetching project:', error);
       return null;
     }
   },
@@ -84,25 +57,13 @@ export const projectApi = {
   // Get projects by category
   getByCategory: async (category: string): Promise<Project[]> => {
     try {
-      const projectsRef = collection(db, 'projects');
-      const q = query(
-        projectsRef,
-        where('category', '==', category),
-        orderBy('createdAt', 'desc')
-      );
-      const querySnapshot = await getDocs(q);
-
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
-          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as unknown as Project;
-      });
+      const response = await fetch(`/api/projects?type=category&category=${category}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects by category');
+      }
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error fetching projects by category:', error);
       return [];
     }
   },
@@ -110,25 +71,13 @@ export const projectApi = {
   // Get recent projects with optional limit
   getRecent: async (limitCount: number = 6): Promise<Project[]> => {
     try {
-      const projectsRef = collection(db, 'projects');
-      const q = query(
-        projectsRef,
-        orderBy('createdAt', 'desc'),
-        limit(limitCount)
-      );
-      const querySnapshot = await getDocs(q);
-
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
-          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as unknown as Project;
-      });
+      const response = await fetch(`/api/projects?type=recent&limit=${limitCount}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch recent projects');
+      }
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error fetching recent projects:', error);
       return [];
     }
   },
@@ -136,25 +85,13 @@ export const projectApi = {
   // Get featured projects
   getFeatured: async (): Promise<Project[]> => {
     try {
-      const projectsRef = collection(db, 'projects');
-      const q = query(
-        projectsRef,
-        where('featured', '==', true),
-        orderBy('createdAt', 'desc')
-      );
-      const querySnapshot = await getDocs(q);
-
-      return querySnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
-          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as unknown as Project;
-      });
+      const response = await fetch('/api/projects?type=featured');
+      if (!response.ok) {
+        throw new Error('Failed to fetch featured projects');
+      }
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error fetching featured projects:', error);
       return [];
     }
   },
@@ -162,25 +99,23 @@ export const projectApi = {
   // Create a new project
   create: async (project: Omit<Project, 'id'>): Promise<Project | null> => {
     try {
-      const projectsRef = collection(db, 'projects');
-      const now = Timestamp.now();
+      const headers = getAuthHeaders();
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(project)
+      });
 
-      const projectData = {
-        ...project,
-        createdAt: now,
-        updatedAt: now
-      };
+      if (!response.ok) {
+        throw new Error('Failed to create project');
+      }
 
-      const docRef = await addDoc(projectsRef, projectData);
-
-      return {
-        id: docRef.id,
-        ...project,
-        createdAt: now.toDate().toISOString(),
-        updatedAt: now.toDate().toISOString()
-      } as unknown as Project;
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error creating project:', error);
       return null;
     }
   },
@@ -188,32 +123,26 @@ export const projectApi = {
   // Update a project
   update: async (id: string, project: Partial<Project>): Promise<Project | null> => {
     try {
-      const projectRef = doc(db, 'projects', id);
-      const now = Timestamp.now();
+      const headers = getAuthHeaders();
+      const response = await fetch(`/api/projects?id=${id}`, {
+        method: 'PUT',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(project)
+      });
 
-      const updateData = {
-        ...project,
-        updatedAt: now
-      };
-
-      await updateDoc(projectRef, updateData);
-
-      // Get the updated document
-      const updatedDoc = await getDoc(projectRef);
-      const data = updatedDoc.data();
-
-      if (!data) {
-        return null;
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error('Failed to update project');
       }
 
-      return {
-        id: updatedDoc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
-        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-      } as unknown as Project;
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error updating project:', error);
       return null;
     }
   },
@@ -221,11 +150,19 @@ export const projectApi = {
   // Delete a project
   delete: async (id: string) => {
     try {
-      const projectRef = doc(db, 'projects', id);
-      await deleteDoc(projectRef);
+      const headers = getAuthHeaders();
+      const response = await fetch(`/api/projects?id=${id}`, {
+        method: 'DELETE',
+        headers
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete project');
+      }
       return { success: true };
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error deleting project:', error);
+      throw error;
     }
   },
 
@@ -285,7 +222,7 @@ export const authApi = {
 
   verify: async () => {
     const headers = getAuthHeaders();
-    const response = await fetch('/api/auth/verify', {
+    const response = await fetch('/api/auth?action=verify', {
       method: 'GET',
       headers
     });
@@ -317,15 +254,13 @@ export const authApi = {
   }
 };
 
-// Global settings API calls using Firebase
+// Global settings API calls
 export const globalSettingsApi = {
   getImageSettings: async () => {
     try {
-      const settingsRef = doc(db, 'settings', 'globalImageSettings');
-      const settingsSnap = await getDoc(settingsRef);
-
-      if (!settingsSnap.exists()) {
-        // Return default settings if none exist
+      const response = await fetch('/api/settings/images');
+      if (!response.ok) {
+        // Return default settings if API call fails
         return {
           defaultThumbnailSettings: {
             aspectRatio: "4:3",
@@ -358,31 +293,33 @@ export const globalSettingsApi = {
           }
         };
       }
-
-      return settingsSnap.data();
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error fetching image settings:', error);
+      return null;
     }
   },
 
   updateImageSettings: async (settings: GlobalImageSettings) => {
     try {
-      const settingsRef = doc(db, 'settings', 'globalImageSettings');
-      const now = Timestamp.now();
+      const headers = getAuthHeaders();
+      const response = await fetch('/api/settings/images', {
+        method: 'PUT',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(settings)
+      });
 
-      const settingsData = {
-        ...settings,
-        updatedAt: now
-      };
+      if (!response.ok) {
+        throw new Error('Failed to update image settings');
+      }
 
-      await updateDoc(settingsRef, settingsData);
-
-      return {
-        ...settings,
-        updatedAt: now.toDate().toISOString()
-      };
+      return await response.json();
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error updating image settings:', error);
+      throw error;
     }
   }
 };
