@@ -1,4 +1,4 @@
-# Portfolio Website
+# Portfolio Website V1.0
 
 A modern, responsive portfolio website built with the MERN stack, featuring smooth GSAP animations, Tailwind CSS styling, and a comprehensive admin dashboard for content management.
 
@@ -134,10 +134,16 @@ portfolio-website/
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgements
+## 🙏 Acknowledgements
 - [GSAP](https://greensock.com/gsap/) for animations
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Shadcn UI](https://ui.shadcn.com/) for UI components
 - [React](https://reactjs.org/) for the frontend framework
 - [Express](https://expressjs.com/) for the backend framework
-- [MongoDB](https://www.mongodb.com/) for the database
+
+## 👨‍💻 Author
+
+**Mukul Meena**
+- Email: mukulmee771@gmail.com
+- Location: Gujarat, India
+- GitHub: [mukul-771](https://github.com/mukul-771)
