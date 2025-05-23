@@ -198,7 +198,7 @@ export const projectApi = {
 // Auth API calls (still using your existing JWT system)
 export const authApi = {
   login: async (email: string, password: string) => {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('/api/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

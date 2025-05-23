@@ -53,7 +53,12 @@ function verifyToken(req) {
 }
 
 async function handler(req, res) {
+  // Ensure JSON response
+  res.setHeader('Content-Type', 'application/json');
+
   const { method } = req;
+
+  console.log('Settings API called:', { method });
 
   try {
     switch (method) {

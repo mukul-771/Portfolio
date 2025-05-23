@@ -59,8 +59,13 @@ function verifyToken(req) {
 }
 
 async function handler(req, res) {
+  // Ensure JSON response
+  res.setHeader('Content-Type', 'application/json');
+
   const { method, query } = req;
   const { type, category, limit, id } = query;
+
+  console.log('Projects API called:', { method, query });
 
   try {
     switch (method) {

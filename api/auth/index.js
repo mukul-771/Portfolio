@@ -28,8 +28,14 @@ function verifyToken(req) {
 }
 
 async function handler(req, res) {
+  // Ensure JSON response
+  res.setHeader('Content-Type', 'application/json');
+
   const { method, query } = req;
   const { action } = query;
+
+  // Add debug logging
+  console.log('Auth API called:', { method, query, action });
 
   try {
     if (method === 'POST' && (!action || action === 'login')) {
