@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Camera, X, Plus, Settings } from 'lucide-react';
+import { X, Plus, Settings } from 'lucide-react';
 import { projectApi } from '../../services/jsonApi';
 import type { ImageSettings } from '../../types/project';
 import ImageSettingsPanel from './ImageSettingsPanel';

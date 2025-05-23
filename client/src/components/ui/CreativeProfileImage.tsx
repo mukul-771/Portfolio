@@ -23,7 +23,7 @@ const CreativeProfileImage = ({
 
   useEffect(() => {
     // Register ScrollTrigger plugin if not already registered
-    if (!gsap.plugins?.ScrollTrigger) {
+    if (!(gsap as any).plugins?.ScrollTrigger) {
       gsap.registerPlugin(ScrollTrigger);
     }
 
@@ -161,37 +161,37 @@ const CreativeProfileImage = ({
           <div className="artistic-frame">
             {/* Brush strokes */}
             <div
-              ref={(el) => el && (brushStrokesRef.current[0] = el)}
+              ref={(el) => { if (el) brushStrokesRef.current[0] = el; }}
               className="brush-stroke brush-top"
             ></div>
             <div
-              ref={(el) => el && (brushStrokesRef.current[1] = el)}
+              ref={(el) => { if (el) brushStrokesRef.current[1] = el; }}
               className="brush-stroke brush-right"
             ></div>
             <div
-              ref={(el) => el && (brushStrokesRef.current[2] = el)}
+              ref={(el) => { if (el) brushStrokesRef.current[2] = el; }}
               className="brush-stroke brush-bottom"
             ></div>
             <div
-              ref={(el) => el && (brushStrokesRef.current[3] = el)}
+              ref={(el) => { if (el) brushStrokesRef.current[3] = el; }}
               className="brush-stroke brush-left"
             ></div>
 
             {/* Corner decorations */}
             <div
-              ref={(el) => el && (cornerDecorationsRef.current[0] = el)}
+              ref={(el) => { if (el) cornerDecorationsRef.current[0] = el; }}
               className="corner-decoration corner-top-left"
             ></div>
             <div
-              ref={(el) => el && (cornerDecorationsRef.current[1] = el)}
+              ref={(el) => { if (el) cornerDecorationsRef.current[1] = el; }}
               className="corner-decoration corner-top-right"
             ></div>
             <div
-              ref={(el) => el && (cornerDecorationsRef.current[2] = el)}
+              ref={(el) => { if (el) cornerDecorationsRef.current[2] = el; }}
               className="corner-decoration corner-bottom-left"
             ></div>
             <div
-              ref={(el) => el && (cornerDecorationsRef.current[3] = el)}
+              ref={(el) => { if (el) cornerDecorationsRef.current[3] = el; }}
               className="corner-decoration corner-bottom-right"
             ></div>
           </div>

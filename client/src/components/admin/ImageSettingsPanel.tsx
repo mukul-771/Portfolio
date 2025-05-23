@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings, RotateCcw, Copy, Save, ChevronDown, ChevronUp, Wand2, Eye, Smartphone, Tablet, Monitor } from 'lucide-react';
+import { Settings, Copy, Save } from 'lucide-react';
 import type { ImageSettings } from '../../types/project';
 import SimplifiedImageControls from './SimplifiedImageControls';
 import LiveWebsitePreview from './LiveWebsitePreview';
@@ -72,8 +72,7 @@ const ImageSettingsPanel = ({
   const [localSettings, setLocalSettings] = useState<ImageSettings>(settings);
   const [hasChanges, setHasChanges] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
-  const [showBeforeAfter, setShowBeforeAfter] = useState(false);
+
 
   useEffect(() => {
     setLocalSettings(settings);

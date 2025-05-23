@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 import { ArrowRight, ChevronDown } from 'lucide-react';
 
 import FadeIn from '../components/animations/FadeIn';
@@ -187,7 +187,7 @@ const Home = () => {
               {featuredProjects.length > 0 ? (
                 featuredProjects.map((project, index) => (
                   <FadeIn key={project.id} delay={index * 0.2} direction="up">
-                    <ProjectCard {...project} globalImageSettings={globalImageSettings} />
+                    <ProjectCard {...project} globalImageSettings={globalImageSettings || undefined} />
                   </FadeIn>
                 ))
               ) : (

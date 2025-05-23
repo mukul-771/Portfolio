@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Globe, Save, RotateCcw, Settings, Monitor, Image, Grid, Wand2, Sparkles } from 'lucide-react';
-import type { GlobalImageSettings, ImageSettings } from '../../types/project';
+import { Globe, Save, RotateCcw, Settings, Monitor, Image, Grid, Wand2 } from 'lucide-react';
+import type { GlobalImageSettings as GlobalImageSettingsType, ImageSettings } from '../../types/project';
 import ImageSettingsPanel from './ImageSettingsPanel';
 
 interface GlobalImageSettingsProps {
-  globalSettings: GlobalImageSettings;
-  onChange: (settings: GlobalImageSettings) => void;
+  globalSettings: GlobalImageSettingsType;
+  onChange: (settings: GlobalImageSettingsType) => void;
   onSave: () => void;
   className?: string;
 }
 
-const DEFAULT_GLOBAL_SETTINGS: GlobalImageSettings = {
+const DEFAULT_GLOBAL_SETTINGS: GlobalImageSettingsType = {
   defaultThumbnailSettings: {
     aspectRatio: '4:3',
     fitBehavior: 'cover',
@@ -72,9 +72,9 @@ const GlobalImageSettings = ({
   onSave,
   className = ''
 }: GlobalImageSettingsProps) => {
-  const [localSettings, setLocalSettings] = useState<GlobalImageSettings>(globalSettings);
+  const [localSettings, setLocalSettings] = useState<GlobalImageSettingsType>(globalSettings);
   const [hasChanges, setHasChanges] = useState(false);
-  const [activeTab, setActiveTab] = useState<keyof GlobalImageSettings>('defaultThumbnailSettings');
+  const [activeTab, setActiveTab] = useState<keyof GlobalImageSettingsType>('defaultThumbnailSettings');
   const [isOptimizing, setIsOptimizing] = useState(false);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const GlobalImageSettings = ({
   }, [globalSettings]);
 
   const handleSettingsChange = (
-    settingType: keyof GlobalImageSettings,
+    settingType: keyof GlobalImageSettingsType,
     newSettings: ImageSettings | typeof globalSettings.responsiveBreakpoints
   ) => {
     const updatedSettings = {
@@ -95,7 +95,7 @@ const GlobalImageSettings = ({
     onChange(updatedSettings);
   };
 
-  const handleImageSettingsChange = (settingType: keyof GlobalImageSettings) => (settings: ImageSettings) => {
+  const handleImageSettingsChange = (settingType: keyof GlobalImageSettingsType) => (settings: ImageSettings) => {
     handleSettingsChange(settingType, settings);
   };
 
@@ -125,7 +125,7 @@ const GlobalImageSettings = ({
     // Simulate optimization process
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    const optimizedSettings: GlobalImageSettings = {
+    const optimizedSettings: GlobalImageSettingsType = {
       defaultThumbnailSettings: {
         aspectRatio: '4:3',
         fitBehavior: 'cover',

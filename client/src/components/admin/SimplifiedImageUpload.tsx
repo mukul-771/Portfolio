@@ -24,7 +24,7 @@ const SimplifiedImageUpload = ({
   imageSettings,
   onImageSettingsChange,
   showImageSettings = false,
-  globalSettings,
+
   previewContext = 'gallery'
 }: SimplifiedImageUploadProps) => {
   const [isUploading, setIsUploading] = useState(false);

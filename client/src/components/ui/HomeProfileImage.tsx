@@ -18,13 +18,12 @@ const HomeProfileImage = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const hexFrameRef = useRef<HTMLDivElement>(null);
   const gradientBorderRef = useRef<HTMLDivElement>(null);
-  const floatingElementsRef = useRef<HTMLDivElement[]>([]);
-  const geometricOverlayRef = useRef<HTMLDivElement>(null);
+
   const innerGlowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Register ScrollTrigger plugin
-    if (!gsap.plugins?.ScrollTrigger) {
+    if (!(gsap as any).plugins?.ScrollTrigger) {
       gsap.registerPlugin(ScrollTrigger);
     }
 

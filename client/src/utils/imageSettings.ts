@@ -16,7 +16,7 @@ export const getImageStyles = (
   fallbackSettings?: ImageSettings
 ): React.CSSProperties => {
   const imageSettings = settings || fallbackSettings || DEFAULT_IMAGE_SETTINGS;
-  const { aspectRatio, customAspectRatio, fitBehavior, width, height, scale = 100 } = imageSettings;
+  const { fitBehavior, scale = 100 } = imageSettings;
 
   let styles: React.CSSProperties = {
     objectFit: fitBehavior as 'cover' | 'contain' | 'fill',

@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -25,12 +25,12 @@ const FadeIn = ({
 
   useEffect(() => {
     const element = elementRef.current;
-    
+
     if (!element) return;
 
     // Set initial state based on direction
-    let initialProps = { opacity: 0 };
-    
+    let initialProps: any = { opacity: 0 };
+
     switch (direction) {
       case 'up':
         initialProps = { ...initialProps, y: 50 };

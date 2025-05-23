@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, LogOut, Save, X, Upload, Image, Camera, Settings, Globe, Star } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, Save, X, Image, Camera, Globe, Star } from 'lucide-react';
 
-import type { Project, ProjectType, ImageSettings, GlobalImageSettings } from '../types/project';
+import type { Project, ImageSettings, GlobalImageSettings } from '../types/project';
 import { projectApi, authApi, globalSettingsApi } from '../services/jsonApi';
-import MultipleImageUpload from '../components/admin/MultipleImageUpload';
+
 import SimplifiedImageUpload from '../components/admin/SimplifiedImageUpload';
 import ImageSettingsPanel from '../components/admin/ImageSettingsPanel';
-import GlobalImageSettings from '../components/admin/GlobalImageSettings';
+import GlobalImageSettingsComponent from '../components/admin/GlobalImageSettings';
 import SuccessNotification from '../components/admin/SuccessNotification';
 
 const AdminDashboard = () => {
@@ -282,7 +282,7 @@ const AdminDashboard = () => {
       showNotification(
         'Error',
         error.message || 'Failed to update project. Please try again.',
-        'error'
+        'warning'
       );
     } finally {
       setIsLoading(false);
@@ -297,7 +297,7 @@ const AdminDashboard = () => {
 
     // If category is changing, animate the transition
     if (name === 'category') {
-      const categoryFields = document.querySelector('.category-specific-fields');
+      const categoryFields = document.querySelector('.category-specific-fields') as HTMLElement;
       if (categoryFields) {
         // Fade out current fields
         categoryFields.style.opacity = '0';
@@ -306,7 +306,7 @@ const AdminDashboard = () => {
         setTimeout(() => {
           setSelectedProject({
             ...selectedProject,
-            [name]: value,
+            [name]: value as 'developer' | 'designer',
           });
 
           // Fade in new fields
@@ -318,7 +318,7 @@ const AdminDashboard = () => {
       } else {
         setSelectedProject({
           ...selectedProject,
-          [name]: value,
+          [name]: value as 'developer' | 'designer',
         });
       }
     } else {
@@ -378,7 +378,7 @@ const AdminDashboard = () => {
         ...selectedProject,
         [fieldName]: imageUrl
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image:', error);
       alert('Failed to upload image. Please try again.');
     } finally {
@@ -1054,7 +1054,7 @@ const AdminDashboard = () => {
         {/* Settings Tab */}
         {activeTab === 'settings' && globalImageSettings && (
           <div>
-            <GlobalImageSettings
+            <GlobalImageSettingsComponent
               globalSettings={globalImageSettings}
               onChange={handleGlobalSettingsChange}
               onSave={handleSaveGlobalSettings}

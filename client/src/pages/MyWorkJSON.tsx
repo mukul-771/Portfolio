@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import FadeIn from '../components/animations/FadeIn';
-import StaggerReveal from '../components/animations/StaggerReveal';
+
 import ProjectCard from '../components/ui/ProjectCard';
 import MinimalToggle from '../components/ui/BrutalistToggle';
 
@@ -146,7 +146,7 @@ const MyWork = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       {projects.map((project) => (
         <div key={project.id} className="project-card">
-          <ProjectCard {...project} globalImageSettings={globalImageSettings} />
+          <ProjectCard {...project} globalImageSettings={globalImageSettings || undefined} />
         </div>
       ))}
       {projects.length === 0 && !loading && (

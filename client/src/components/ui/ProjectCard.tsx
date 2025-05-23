@@ -107,7 +107,7 @@ const ProjectCard = ({
           style={{
             transform: isHovered ? 'scale(1.05)' : 'scale(1)'
           }}
-          onError={(e) => {
+          onError={() => {
             console.error('Failed to load image:', imageUrl);
           }}
           priority={true}

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Mail, Phone, MapPin, Github, Linkedin, Instagram, Twitter, Heart } from 'lucide-react';
+import { Mail, Phone, MapPin, Github, Linkedin, Instagram, Heart } from 'lucide-react';
 
 import FadeIn from '../components/animations/FadeIn';
 import ContactForm from '../components/ui/ContactForm';
@@ -15,10 +15,10 @@ const Contact = () => {
       const paths = signatureRef.current.querySelectorAll('path');
 
       gsap.set(paths, {
-        strokeDasharray: function(i, target) {
+        strokeDasharray: function(_i, target) {
           return target.getTotalLength();
         },
-        strokeDashoffset: function(i, target) {
+        strokeDashoffset: function(_i, target) {
           return target.getTotalLength();
         }
       });
@@ -134,15 +134,7 @@ const Contact = () => {
                     >
                       <Instagram size={24} />
                     </a>
-                    <a
-                      href="https://twitter.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-gray-100 hover:bg-blue-100 p-4 rounded-full text-gray-600 hover:text-blue-400 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg"
-                      aria-label="Twitter"
-                    >
-                      <Twitter size={24} />
-                    </a>
+
                   </div>
                 </div>
 

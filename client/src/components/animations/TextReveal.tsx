@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
@@ -29,7 +29,7 @@ const TextReveal = ({
 
   useEffect(() => {
     const textElement = textRef.current;
-    
+
     if (!textElement) return;
 
     // Split text

@@ -85,7 +85,7 @@ const BentoBoxLayout = ({ images, projectTitle, imageSettings, globalSettings }:
                   globalSettings={globalSettings}
                   className="transition-transform duration-500 group-hover:scale-105"
                   containerClassName="h-full w-full absolute inset-0"
-                  onError={(e) => {
+                  onError={() => {
                     console.error('Image failed to load:', image);
                   }}
                 />

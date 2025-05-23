@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { gsap } from 'gsap';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { contactApi } from '../../services/jsonApi';

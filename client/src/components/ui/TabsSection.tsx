@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { gsap } from 'gsap';
 import * as Tabs from '@radix-ui/react-tabs';
 

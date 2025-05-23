@@ -1,4 +1,4 @@
-import { useEffect, useRef, ReactNode, Children, cloneElement, isValidElement } from 'react';
+import { useEffect, useRef, type ReactNode, Children, cloneElement, isValidElement } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -31,12 +31,12 @@ const StaggerReveal = ({
   useEffect(() => {
     const container = containerRef.current;
     const elements = elementsRef.current;
-    
+
     if (!container || elements.length === 0) return;
 
     // Set initial state based on direction
-    let initialProps = { opacity: 0 };
-    
+    let initialProps: any = { opacity: 0 };
+
     switch (direction) {
       case 'up':
         initialProps = { ...initialProps, y: 30 };
@@ -92,11 +92,11 @@ const StaggerReveal = ({
   // Clone children and add refs
   const childrenWithRefs = Children.map(children, (child, index) => {
     if (isValidElement(child)) {
-      return cloneElement(child, {
+      return cloneElement(child as any, {
         ref: (el: HTMLDivElement) => {
           if (el) elementsRef.current[index] = el;
         },
-        className: `${child.props.className || ''} ${childClassName}`.trim()
+        className: `${(child.props as any).className || ''} ${childClassName}`.trim()
       });
     }
     return child;
