@@ -1,8 +1,9 @@
 // Consolidated Vercel API route for all project operations
 const allowCors = require('../_utils/cors');
 const jwt = require('jsonwebtoken');
+const { getFirestore } = require('../_utils/firebase');
 
-// Mock projects data for demo purposes
+// Mock projects data for demo purposes (fallback when Firebase is not available)
 let mockProjects = [
   {
     id: '1',
@@ -41,6 +42,24 @@ let mockProjects = [
   }
 ];
 
+// Helper function to check if Firebase is available
+const isFirebaseAvailable = () => {
+  try {
+    const db = getFirestore();
+    return db !== null;
+  } catch (error) {
+    return false;
+  }
+};
+
+// Helper function to convert Firestore timestamp to ISO string
+const convertTimestamp = (timestamp) => {
+  if (timestamp && timestamp.toDate) {
+    return timestamp.toDate().toISOString();
+  }
+  return timestamp;
+};
+
 function verifyToken(req) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -68,32 +87,86 @@ async function handler(req, res) {
   console.log('Projects API called:', { method, query });
 
   try {
+    const useFirebase = isFirebaseAvailable();
+
     switch (method) {
       case 'GET':
-        // Handle different GET operations based on query parameters
-        if (type === 'featured') {
-          // Get featured projects
-          const featuredProjects = mockProjects.filter(p => p.featured);
-          res.status(200).json(featuredProjects);
-        } else if (type === 'recent') {
-          // Get recent projects with optional limit
-          const limitCount = limit ? parseInt(limit) : 6;
-          const recentProjects = mockProjects.slice(0, limitCount);
-          res.status(200).json(recentProjects);
-        } else if (type === 'category' && category) {
-          // Get projects by category
-          const projectsByCategory = mockProjects.filter(p => p.category === category);
-          res.status(200).json(projectsByCategory);
-        } else if (id) {
-          // Get project by ID
-          const project = mockProjects.find(p => p.id === id);
-          if (!project) {
-            return res.status(404).json({ message: 'Project not found' });
+        if (useFirebase) {
+          // Use Firebase
+          const db = getFirestore();
+          const projectsRef = db.collection('projects');
+
+          if (type === 'featured') {
+            const snapshot = await projectsRef.where('featured', '==', true).orderBy('createdAt', 'desc').get();
+            const featuredProjects = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              createdAt: convertTimestamp(doc.data().createdAt),
+              updatedAt: convertTimestamp(doc.data().updatedAt)
+            }));
+            res.status(200).json(featuredProjects);
+          } else if (type === 'recent') {
+            const limitCount = limit ? parseInt(limit) : 6;
+            const snapshot = await projectsRef.orderBy('createdAt', 'desc').limit(limitCount).get();
+            const recentProjects = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              createdAt: convertTimestamp(doc.data().createdAt),
+              updatedAt: convertTimestamp(doc.data().updatedAt)
+            }));
+            res.status(200).json(recentProjects);
+          } else if (type === 'category' && category) {
+            const snapshot = await projectsRef.where('category', '==', category).orderBy('createdAt', 'desc').get();
+            const projectsByCategory = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              createdAt: convertTimestamp(doc.data().createdAt),
+              updatedAt: convertTimestamp(doc.data().updatedAt)
+            }));
+            res.status(200).json(projectsByCategory);
+          } else if (id) {
+            const doc = await projectsRef.doc(id).get();
+            if (!doc.exists) {
+              return res.status(404).json({ message: 'Project not found' });
+            }
+            const project = {
+              id: doc.id,
+              ...doc.data(),
+              createdAt: convertTimestamp(doc.data().createdAt),
+              updatedAt: convertTimestamp(doc.data().updatedAt)
+            };
+            res.status(200).json(project);
+          } else {
+            const snapshot = await projectsRef.orderBy('createdAt', 'desc').get();
+            const projects = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+              createdAt: convertTimestamp(doc.data().createdAt),
+              updatedAt: convertTimestamp(doc.data().updatedAt)
+            }));
+            res.status(200).json(projects);
           }
-          res.status(200).json(project);
         } else {
-          // Get all projects
-          res.status(200).json(mockProjects);
+          // Use mock data
+          if (type === 'featured') {
+            const featuredProjects = mockProjects.filter(p => p.featured);
+            res.status(200).json(featuredProjects);
+          } else if (type === 'recent') {
+            const limitCount = limit ? parseInt(limit) : 6;
+            const recentProjects = mockProjects.slice(0, limitCount);
+            res.status(200).json(recentProjects);
+          } else if (type === 'category' && category) {
+            const projectsByCategory = mockProjects.filter(p => p.category === category);
+            res.status(200).json(projectsByCategory);
+          } else if (id) {
+            const project = mockProjects.find(p => p.id === id);
+            if (!project) {
+              return res.status(404).json({ message: 'Project not found' });
+            }
+            res.status(200).json(project);
+          } else {
+            res.status(200).json(mockProjects);
+          }
         }
         break;
 
@@ -104,14 +177,37 @@ async function handler(req, res) {
           return res.status(401).json({ message: authResult.error });
         }
 
-        const newProject = {
-          id: Date.now().toString(),
-          ...req.body,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-        mockProjects.push(newProject);
-        res.status(201).json(newProject);
+        if (useFirebase) {
+          // Use Firebase
+          const db = getFirestore();
+          const projectsRef = db.collection('projects');
+          const now = new Date();
+
+          const projectData = {
+            ...req.body,
+            createdAt: now,
+            updatedAt: now
+          };
+
+          const docRef = await projectsRef.add(projectData);
+          const newProject = {
+            id: docRef.id,
+            ...projectData,
+            createdAt: now.toISOString(),
+            updatedAt: now.toISOString()
+          };
+          res.status(201).json(newProject);
+        } else {
+          // Use mock data
+          const newProject = {
+            id: Date.now().toString(),
+            ...req.body,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          };
+          mockProjects.push(newProject);
+          res.status(201).json(newProject);
+        }
         break;
 
       case 'PUT':
@@ -125,18 +221,46 @@ async function handler(req, res) {
           return res.status(401).json({ message: updateAuthResult.error });
         }
 
-        const projectIndex = mockProjects.findIndex(p => p.id === id);
-        if (projectIndex === -1) {
-          return res.status(404).json({ message: 'Project not found' });
-        }
+        if (useFirebase) {
+          // Use Firebase
+          const db = getFirestore();
+          const projectRef = db.collection('projects').doc(id);
+          const doc = await projectRef.get();
 
-        const updatedProject = {
-          ...mockProjects[projectIndex],
-          ...req.body,
-          updatedAt: new Date().toISOString()
-        };
-        mockProjects[projectIndex] = updatedProject;
-        res.status(200).json(updatedProject);
+          if (!doc.exists) {
+            return res.status(404).json({ message: 'Project not found' });
+          }
+
+          const updateData = {
+            ...req.body,
+            updatedAt: new Date()
+          };
+
+          await projectRef.update(updateData);
+
+          const updatedDoc = await projectRef.get();
+          const updatedProject = {
+            id: updatedDoc.id,
+            ...updatedDoc.data(),
+            createdAt: convertTimestamp(updatedDoc.data().createdAt),
+            updatedAt: convertTimestamp(updatedDoc.data().updatedAt)
+          };
+          res.status(200).json(updatedProject);
+        } else {
+          // Use mock data
+          const projectIndex = mockProjects.findIndex(p => p.id === id);
+          if (projectIndex === -1) {
+            return res.status(404).json({ message: 'Project not found' });
+          }
+
+          const updatedProject = {
+            ...mockProjects[projectIndex],
+            ...req.body,
+            updatedAt: new Date().toISOString()
+          };
+          mockProjects[projectIndex] = updatedProject;
+          res.status(200).json(updatedProject);
+        }
         break;
 
       case 'DELETE':
@@ -150,13 +274,28 @@ async function handler(req, res) {
           return res.status(401).json({ message: deleteAuthResult.error });
         }
 
-        const deleteIndex = mockProjects.findIndex(p => p.id === id);
-        if (deleteIndex === -1) {
-          return res.status(404).json({ message: 'Project not found' });
-        }
+        if (useFirebase) {
+          // Use Firebase
+          const db = getFirestore();
+          const projectRef = db.collection('projects').doc(id);
+          const doc = await projectRef.get();
 
-        mockProjects.splice(deleteIndex, 1);
-        res.status(200).json({ message: 'Project deleted successfully' });
+          if (!doc.exists) {
+            return res.status(404).json({ message: 'Project not found' });
+          }
+
+          await projectRef.delete();
+          res.status(200).json({ message: 'Project deleted successfully' });
+        } else {
+          // Use mock data
+          const deleteIndex = mockProjects.findIndex(p => p.id === id);
+          if (deleteIndex === -1) {
+            return res.status(404).json({ message: 'Project not found' });
+          }
+
+          mockProjects.splice(deleteIndex, 1);
+          res.status(200).json({ message: 'Project deleted successfully' });
+        }
         break;
 
       default:
