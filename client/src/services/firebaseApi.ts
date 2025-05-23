@@ -50,7 +50,7 @@ export const projectApi = {
           ...data,
           createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as Project;
+        } as unknown as Project;
       });
     } catch (error) {
       handleFirebaseError(error);
@@ -74,7 +74,7 @@ export const projectApi = {
         ...data,
         createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
         updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-      } as Project;
+      } as unknown as Project;
     } catch (error) {
       handleFirebaseError(error);
       return null;
@@ -99,7 +99,7 @@ export const projectApi = {
           ...data,
           createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as Project;
+        } as unknown as Project;
       });
     } catch (error) {
       handleFirebaseError(error);
@@ -125,7 +125,7 @@ export const projectApi = {
           ...data,
           createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as Project;
+        } as unknown as Project;
       });
     } catch (error) {
       handleFirebaseError(error);
@@ -151,7 +151,7 @@ export const projectApi = {
           ...data,
           createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-        } as Project;
+        } as unknown as Project;
       });
     } catch (error) {
       handleFirebaseError(error);
@@ -178,7 +178,7 @@ export const projectApi = {
         ...project,
         createdAt: now.toDate().toISOString(),
         updatedAt: now.toDate().toISOString()
-      } as Project;
+      } as unknown as Project;
     } catch (error) {
       handleFirebaseError(error);
       return null;
@@ -211,7 +211,7 @@ export const projectApi = {
         ...data,
         createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
         updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-      } as Project;
+      } as unknown as Project;
     } catch (error) {
       handleFirebaseError(error);
       return null;

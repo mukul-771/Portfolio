@@ -62,3 +62,4 @@ Thumbs.db
 # Optional npm cache directory
 .npm
 .eslintcache
+.vercel
