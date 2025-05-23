@@ -13,8 +13,8 @@ async function handler(req, res) {
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
-      return res.status(400).json({ 
-        message: 'All fields are required' 
+      return res.status(400).json({
+        message: 'All fields are required'
       });
     }
 
@@ -32,10 +32,13 @@ async function handler(req, res) {
 
     // Send email notification
     const transporter = nodemailer.createTransporter({
-      service: process.env.EMAIL_SERVICE || 'gmail',
+      service: 'gmail',
       auth: {
         user: emailUser,
         pass: emailPassword
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
 
@@ -53,14 +56,33 @@ async function handler(req, res) {
       `
     };
 
-    await transporter.sendMail(mailOptions);
+    // Test the connection first
+    await transporter.verify();
+    console.log('SMTP connection verified successfully');
+
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.messageId);
 
     res.status(201).json({ message: 'Contact form submitted successfully' });
   } catch (error) {
-    console.error('Contact form error:', error);
-    res.status(500).json({
-      message: 'There was an error processing your message. Please try again or contact directly via email.'
+    console.error('Contact form error details:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
     });
+
+    // Provide more specific error messages
+    let errorMessage = 'There was an error processing your message. Please try again or contact directly via email.';
+
+    if (error.code === 'EAUTH') {
+      errorMessage = 'Email authentication failed. Please contact directly via email: mukulmee771@gmail.com';
+    } else if (error.code === 'ECONNECTION') {
+      errorMessage = 'Email service temporarily unavailable. Please contact directly via email: mukulmee771@gmail.com';
+    }
+
+    res.status(500).json({ message: errorMessage });
   }
 }
 
