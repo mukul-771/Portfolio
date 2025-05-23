@@ -1,0 +1,169 @@
+/* Home Profile Image - Large Clean Modern Design */
+.home-profile-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 400px; /* 1:1 aspect ratio for circular */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove floating elements - keep it clean */
+.floating-elements {
+  display: none;
+}
+
+/* Main image container */
+.image-container {
+  position: relative;
+  width: 350px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Clean circular border */
+.gradient-border {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(135deg,
+    rgba(96, 165, 250, 0.2) 0%,
+    rgba(147, 197, 253, 0.15) 50%,
+    rgba(96, 165, 250, 0.2) 100%);
+  border-radius: 50%;
+  z-index: 2;
+  opacity: 0.8;
+  transition: all 0.4s ease;
+}
+
+.home-profile-container:hover .gradient-border {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* Clean circular frame */
+.hex-frame {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(96, 165, 250, 0.05) 100%);
+  border-radius: 50%;
+  z-index: 3;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(96, 165, 250, 0.15);
+  transition: all 0.5s ease;
+  box-shadow: 0 10px 40px rgba(96, 165, 250, 0.1);
+}
+
+.home-profile-container:hover .hex-frame {
+  transform: translateY(-5px);
+  border-color: rgba(96, 165, 250, 0.25);
+  box-shadow: 0 15px 50px rgba(96, 165, 250, 0.15);
+}
+
+/* Subtle inner glow */
+.inner-glow {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  background: radial-gradient(circle at center,
+    rgba(96, 165, 250, 0.08) 0%,
+    rgba(96, 165, 250, 0.04) 40%,
+    transparent 70%);
+  border-radius: 50%;
+  z-index: 4;
+}
+
+/* Profile image - clean circular */
+.profile-image {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  object-fit: cover;
+  border-radius: 50%;
+  z-index: 5;
+  filter: saturate(1.05) contrast(1.02);
+  transition: all 0.5s ease;
+}
+
+.home-profile-container:hover .profile-image {
+  filter: saturate(1.08) contrast(1.04) brightness(1.02);
+  transform: scale(1.02);
+}
+
+/* Remove overlay - keep it clean */
+.geometric-overlay {
+  display: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .home-profile-container {
+    max-width: 320px;
+    height: 320px;
+  }
+
+  .image-container {
+    width: 280px;
+    height: 280px;
+  }
+
+  .hex-frame {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-profile-container {
+    max-width: 280px;
+    height: 280px;
+  }
+
+  .image-container {
+    width: 240px;
+    height: 240px;
+  }
+
+  .hex-frame {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+/* Clean circular shadow */
+.home-profile-container::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 50%;
+  z-index: 1;
+  filter: blur(20px);
+  opacity: 0.6;
+  transition: all 0.5s ease;
+}
+
+.home-profile-container:hover::before {
+  opacity: 0.8;
+  transform: translateX(-50%) translateY(5px);
+}

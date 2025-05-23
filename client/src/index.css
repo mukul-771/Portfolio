@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-blue-400 min-h-screen;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply font-sans text-base md:text-lg;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-blue-400 hover:bg-blue-500 text-white;
+  }
+
+  .btn-secondary {
+    @apply bg-blue-300 hover:bg-blue-400 text-white;
+  }
+
+  .btn-outline {
+    @apply border-2 border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white;
+  }
+
+  .container-custom {
+    @apply container mx-auto px-4 md:px-8;
+  }
+
+  .glass-navbar {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.05),
+      0 1px 0 rgba(255, 255, 255, 0.5) inset,
+      0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+  }
+
+  .glass-mobile-menu {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  }
+
+  /* Image container utilities */
+  .image-container-fill {
+    @apply relative overflow-hidden;
+  }
+
+  .image-container-fill img {
+    @apply w-full h-full object-cover;
+  }
+
+  /* Ensure ResponsiveImage containers fill properly */
+  .responsive-image-container {
+    @apply relative overflow-hidden;
+    min-height: inherit;
+  }
+
+  .responsive-image-container img {
+    @apply w-full h-full;
+    min-height: 100%;
+    min-width: 100%;
+  }
+
+  /* Fix for aspect ratio containers */
+  .aspect-w-16.aspect-h-9 {
+    position: relative;
+    padding-bottom: 56.25%; /* 9/16 = 0.5625 */
+  }
+
+  .aspect-w-16.aspect-h-9 > * {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
