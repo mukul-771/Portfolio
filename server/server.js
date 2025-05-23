@@ -10,7 +10,20 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://portfolio-v1-0.vercel.app',
+    'https://portfolio-v1-0-git-main-mukul-771.vercel.app',
+    'https://portfolio-v1-0-mukul-771.vercel.app',
+    // Add your custom domain here when you get one
+    // 'https://yourdomain.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
