@@ -1,8 +1,8 @@
-// Vercel API route for image uploads
-// Note: This is a simplified version for Vercel deployment
-// For production, consider using external storage like Cloudinary, AWS S3, etc.
+// Vercel API route for image uploads using Firebase Storage
 const allowCors = require('../_utils/cors');
 const { verifyToken } = require('../_utils/auth');
+const { getStorage } = require('../_utils/firebase');
+const formidable = require('formidable');
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,41 +17,59 @@ async function handler(req, res) {
       return res.status(401).json({ message: authResult.error });
     }
 
-    // For Vercel deployment, we'll use a placeholder approach
-    // In a real production environment, you would integrate with:
-    // - Cloudinary
-    // - AWS S3
-    // - Vercel Blob
-    // - Other cloud storage services
+    // Parse form data
+    const form = formidable({
+      maxFileSize: 5 * 1024 * 1024, // 5MB limit
+      filter: ({ mimetype }) => {
+        // Accept only images
+        return mimetype && mimetype.includes('image');
+      }
+    });
 
-    const { imageData, fileName } = req.body;
+    const [fields, files] = await form.parse(req);
+    const file = files.image?.[0];
 
-    if (!imageData || !fileName) {
-      return res.status(400).json({ message: 'Image data and filename are required' });
+    if (!file) {
+      return res.status(400).json({ message: 'No image file provided' });
     }
 
     // Generate a unique filename
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const fileExtension = fileName.split('.').pop();
-    const uniqueFileName = `${uniqueSuffix}.${fileExtension}`;
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2);
+    const fileExtension = file.originalFilename?.split('.').pop() || 'jpg';
+    const fileName = `${timestamp}-${randomString}.${fileExtension}`;
 
-    // For demo purposes, we'll return a placeholder URL
-    // In production, you would upload to your chosen storage service
-    const imageUrl = `/uploads/images/${uniqueFileName}`;
+    // Get Firebase Storage instance
+    const storage = getStorage();
+    const bucket = storage.bucket();
+    const fileRef = bucket.file(`project-images/${fileName}`);
 
-    // TODO: Implement actual file upload to external storage
-    // Example with Cloudinary:
-    // const uploadResult = await cloudinary.uploader.upload(imageData);
-    // const imageUrl = uploadResult.secure_url;
+    // Read file buffer
+    const fs = require('fs');
+    const fileBuffer = fs.readFileSync(file.filepath);
 
-    res.status(200).json({ 
-      imageUrl,
-      message: 'Image uploaded successfully (demo mode)'
+    // Upload to Firebase Storage
+    await fileRef.save(fileBuffer, {
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+
+    // Make the file publicly accessible
+    await fileRef.makePublic();
+
+    // Get the public URL
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/project-images/${fileName}`;
+
+    res.status(200).json({
+      imageUrl: publicUrl,
+      fileName: fileName,
+      message: 'Image uploaded successfully'
     });
 
   } catch (error) {
     console.error('Upload API error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error.message || 'Internal server error' });
   }
 }
 

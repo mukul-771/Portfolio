@@ -8,7 +8,7 @@ import FadeIn from '../components/animations/FadeIn';
 import ProjectCard from '../components/ui/ProjectCard';
 import HomeProfileImage from '../components/ui/HomeProfileImage';
 import profileImage from '../assets/images/profile.png';
-import { projectApi, globalSettingsApi } from '../services/jsonApi';
+import { projectApi, globalSettingsApi } from '../services/firebaseApi';
 import type { Project, GlobalImageSettings } from '../types/project';
 
 const Home = () => {

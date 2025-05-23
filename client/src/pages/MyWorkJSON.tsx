@@ -13,7 +13,7 @@ import designerBg from '../assets/backgrounds/designer-bg.svg';
 
 // Import project types
 import type { Project, GlobalImageSettings } from '../types/project';
-import { projectApi, globalSettingsApi } from '../services/jsonApi';
+import { projectApi, globalSettingsApi } from '../services/firebaseApi';
 
 const MyWork = () => {
   // State for projects

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Github, Linkedin, Instagram, Twitter } from 'lucide-react';
+import { Github, Linkedin, Instagram } from 'lucide-react';
 
 const Footer = () => {
   const footerRef = useRef<HTMLDivElement>(null);
@@ -73,16 +73,7 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-blue-500">Connect</h3>
             <div className="flex space-x-4">
               <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-300 hover:text-blue-500 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github size={24} />
-              </a>
-              <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/mukul-meena-95b599270/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-300 hover:text-blue-500 transition-colors"
@@ -91,7 +82,7 @@ const Footer = () => {
                 <Linkedin size={24} />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/mukul_7711/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-300 hover:text-blue-500 transition-colors"
@@ -100,13 +91,13 @@ const Footer = () => {
                 <Instagram size={24} />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://github.com/mukul-771"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-300 hover:text-blue-500 transition-colors"
-                aria-label="Twitter"
+                aria-label="GitHub"
               >
-                <Twitter size={24} />
+                <Github size={24} />
               </a>
             </div>
           </div>

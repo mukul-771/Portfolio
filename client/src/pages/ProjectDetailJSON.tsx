@@ -12,7 +12,7 @@ import MagazineProjectDetail from '../components/project-details/MagazineProject
 import GenericDesignerProjectDetail from '../components/project-details/GenericDesignerProjectDetail';
 
 import type { Project } from '../types/project';
-import { projectApi } from '../services/jsonApi';
+import { projectApi } from '../services/firebaseApi';
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,13 +24,13 @@ const ProjectDetail = () => {
     // Fetch project details from JSON API
     const fetchProject = async () => {
       if (!id) return;
-      
+
       try {
         setLoading(true);
         setError(null);
-        
+
         const projectData = await projectApi.getById(id);
-        
+
         if (projectData) {
           setProject(projectData);
         } else {

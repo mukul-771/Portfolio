@@ -1,6 +1,6 @@
-// Vercel API route for featured projects
+// Vercel API route for featured projects using Firebase
 const allowCors = require('../_utils/cors');
-const { readDatabase } = require('../_utils/database');
+const { projectOperations } = require('../_utils/database');
 
 async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -9,12 +9,11 @@ async function handler(req, res) {
   }
 
   try {
-    const db = await readDatabase();
-    const featuredProjects = (db.projects || []).filter(project => project.featured === true);
+    const featuredProjects = await projectOperations.getFeatured();
     res.status(200).json(featuredProjects);
   } catch (error) {
     console.error('Featured projects API error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error.message || 'Internal server error' });
   }
 }
 

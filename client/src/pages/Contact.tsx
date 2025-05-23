@@ -108,16 +108,7 @@ const Contact = () => {
                   <h3 className="font-semibold text-gray-900 text-xl mb-6">Connect With Me</h3>
                   <div className="flex space-x-4">
                     <a
-                      href="https://github.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-gray-100 hover:bg-blue-100 p-4 rounded-full text-gray-600 hover:text-blue-400 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg"
-                      aria-label="GitHub"
-                    >
-                      <Github size={24} />
-                    </a>
-                    <a
-                      href="https://linkedin.com"
+                      href="https://www.linkedin.com/in/mukul-meena-95b599270/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-gray-100 hover:bg-blue-100 p-4 rounded-full text-gray-600 hover:text-blue-400 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg"
@@ -126,13 +117,22 @@ const Contact = () => {
                       <Linkedin size={24} />
                     </a>
                     <a
-                      href="https://instagram.com"
+                      href="https://www.instagram.com/mukul_7711/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-gray-100 hover:bg-blue-100 p-4 rounded-full text-gray-600 hover:text-blue-400 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg"
                       aria-label="Instagram"
                     >
                       <Instagram size={24} />
+                    </a>
+                    <a
+                      href="https://github.com/mukul-771"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-gray-100 hover:bg-blue-100 p-4 rounded-full text-gray-600 hover:text-blue-400 transition-all duration-300 transform hover:scale-110 shadow-md hover:shadow-lg"
+                      aria-label="GitHub"
+                    >
+                      <Github size={24} />
                     </a>
 
                   </div>

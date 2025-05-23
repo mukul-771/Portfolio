@@ -1,6 +1,6 @@
-// Vercel API route for projects by category
+// Vercel API route for projects by category using Firebase
 const allowCors = require('../../_utils/cors');
-const { readDatabase } = require('../../_utils/database');
+const { projectOperations } = require('../../_utils/database');
 
 async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -10,16 +10,11 @@ async function handler(req, res) {
 
   try {
     const { category } = req.query;
-    const db = await readDatabase();
-    
-    const projectsByCategory = (db.projects || []).filter(
-      project => project.category && project.category.toLowerCase() === category.toLowerCase()
-    );
-    
+    const projectsByCategory = await projectOperations.getByCategory(category);
     res.status(200).json(projectsByCategory);
   } catch (error) {
     console.error('Projects by category API error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error.message || 'Internal server error' });
   }
 }
 

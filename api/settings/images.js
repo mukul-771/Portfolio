@@ -1,18 +1,16 @@
-// Vercel API route for global image settings
+// Vercel API route for global image settings using Firebase
 const allowCors = require('../_utils/cors');
-const { readDatabase, writeDatabase } = require('../_utils/database');
+const { globalSettingsOperations } = require('../_utils/database');
 const { verifyToken } = require('../_utils/auth');
 
 async function handler(req, res) {
   const { method } = req;
 
   try {
-    const db = await readDatabase();
-
     switch (method) {
       case 'GET':
         // Get global image settings
-        const settings = db.globalImageSettings || {};
+        const settings = await globalSettingsOperations.getImageSettings();
         res.status(200).json(settings);
         break;
 
@@ -23,17 +21,8 @@ async function handler(req, res) {
           return res.status(401).json({ message: authResult.error });
         }
 
-        db.globalImageSettings = {
-          ...db.globalImageSettings,
-          ...req.body
-        };
-
-        const saved = await writeDatabase(db);
-        if (!saved) {
-          return res.status(500).json({ message: 'Failed to update settings' });
-        }
-
-        res.status(200).json(db.globalImageSettings);
+        const updatedSettings = await globalSettingsOperations.updateImageSettings(req.body);
+        res.status(200).json(updatedSettings);
         break;
 
       default:
@@ -42,7 +31,7 @@ async function handler(req, res) {
     }
   } catch (error) {
     console.error('Settings API error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: error.message || 'Internal server error' });
   }
 }
 

@@ -13,7 +13,7 @@ A modern, responsive portfolio website built with the MERN stack, featuring smoo
 - **Featured Projects**: Highlight your best work on the homepage
 - **Contact Form**: Functional contact form with email integration
 - **Image Management**: Advanced image controls with aspect ratios and responsive settings
-- **JSON Storage**: Completely free database solution with no external dependencies
+- **Firebase Integration**: Firestore database and Storage for persistent data and image uploads
 
 ## 🛠️ Tech Stack
 
@@ -27,10 +27,10 @@ A modern, responsive portfolio website built with the MERN stack, featuring smoo
 - **Lucide React** for icons
 
 ### Backend
-- **Node.js** with Express
-- **JSON file storage** (no database required)
+- **Vercel Serverless Functions** for API
+- **Firebase Firestore** for database
+- **Firebase Storage** for image uploads
 - **JWT Authentication** for admin access
-- **Multer** for file uploads
 - **Nodemailer** for contact form emails
 - **bcryptjs** for password hashing
 
@@ -106,30 +106,55 @@ portfolio-website/
 │       ├── assets/         # Images, fonts, etc.
 │       ├── components/     # Reusable components
 │       │   ├── animations/ # GSAP animation components
+│       │   ├── admin/      # Admin panel components
 │       │   ├── layout/     # Layout components (Navbar, Footer)
 │       │   └── ui/         # UI components
+│       ├── config/         # Configuration files (Firebase)
 │       ├── hooks/          # Custom React hooks
 │       ├── pages/          # Page components
+│       ├── services/       # API service functions
 │       └── utils/          # Utility functions
-├── server/                 # Backend Node.js application
-│   ├── config/             # Configuration files
-│   ├── controllers/        # Route controllers
-│   ├── models/             # MongoDB models
-│   └── routes/             # API routes
+├── api/                    # Vercel serverless functions
+│   ├── _utils/             # Utility functions (Firebase, auth)
+│   ├── auth/               # Authentication endpoints
+│   ├── projects/           # Project management endpoints
+│   └── settings/           # Settings endpoints
+├── scripts/                # Migration and setup scripts
 └── README.md               # Project documentation
 ```
+
+## 🚀 Deployment
+
+This project is optimized for **Vercel deployment** with Firebase backend.
+
+### Quick Deploy
+
+1. **Set up Firebase** (follow `FIREBASE_SETUP_GUIDE.md`)
+2. **Deploy to Vercel** (follow `VERCEL_DEPLOYMENT_GUIDE.md`)
+3. **Migrate data** using the provided migration script
+4. **Test admin panel** functionality
+
+### Key Features After Deployment
+
+- ✅ **Dynamic project management** through admin panel
+- ✅ **Persistent data storage** with Firebase Firestore
+- ✅ **Image uploads** to Firebase Storage
+- ✅ **Serverless architecture** for optimal performance
+- ✅ **Free hosting** with room to scale
 
 ## Customization
 
 ### Adding Projects
-1. Add your projects to the MongoDB database using the API endpoints
-2. Or modify the sample data in the `MyWork.tsx` file
+1. **Use the admin panel** at `/admin` to add projects dynamically
+2. **Upload images** directly through the interface
+3. **Set featured projects** to highlight on homepage
 
 ### Changing Colors
 1. Edit the color palette in the `tailwind.config.js` file
 
 ### Updating Content
 1. Modify the text content in the respective page components
+2. Update profile information in the About page
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -139,7 +164,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Shadcn UI](https://ui.shadcn.com/) for UI components
 - [React](https://reactjs.org/) for the frontend framework
-- [Express](https://expressjs.com/) for the backend framework
+- [Firebase](https://firebase.google.com/) for backend services
+- [Vercel](https://vercel.com/) for hosting and serverless functions
 
 ## 👨‍💻 Author
 

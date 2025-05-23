@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { Upload, X, Plus, Image, Settings, Eye, Wand2 } from 'lucide-react';
-import { projectApi } from '../../services/jsonApi';
+import { projectApi } from '../../services/firebaseApi';
 import type { ImageSettings } from '../../types/project';
 import LiveWebsitePreview from './LiveWebsitePreview';
 

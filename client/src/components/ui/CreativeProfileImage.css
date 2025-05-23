@@ -1,161 +1,311 @@
-/* Artistic designer-focused profile image styling */
+/* Orbital Circular Profile Image Design */
 .profile-container {
   position: relative;
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
+  height: 500px;
   margin: 0 auto;
-  transition: transform 0.5s ease;
+  padding: 20px;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: linear-gradient(135deg,
+    rgba(248, 250, 252, 0.8) 0%,
+    rgba(241, 245, 249, 0.9) 100%);
+  border-radius: 20px;
+  overflow: visible;
 }
 
-.profile-square {
-  position: relative;
-  width: 100%;
-  padding-bottom: 100%; /* Creates a 1:1 aspect ratio */
-  overflow: hidden;
-  background-color: #f8f9fa;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 0; /* Ensure completely square - no rounded corners */
-}
 
-/* Subtle paper texture */
-.profile-square::before {
-  content: '';
+
+/* Background gradient circles */
+.background-circles {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-  opacity: 0.5;
-  z-index: 1;
   pointer-events: none;
+  z-index: 1;
 }
 
-.profile-image-wrapper {
+.bg-circle {
   position: absolute;
-  top: 0;
-  left: 0;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+  transition: all 0.8s ease;
+}
+
+.bg-circle-1 {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg,
+    rgba(96, 165, 250, 0.15) 0%,
+    rgba(96, 165, 250, 0.05) 100%);
+  animation: rotate 20s linear infinite;
+}
+
+.bg-circle-2 {
+  width: 320px;
+  height: 320px;
+  background: linear-gradient(225deg,
+    rgba(255, 150, 113, 0.12) 0%,
+    rgba(255, 150, 113, 0.04) 100%);
+  animation: rotate 15s linear infinite reverse;
+}
+
+.bg-circle-3 {
+  width: 240px;
+  height: 240px;
+  background: linear-gradient(315deg,
+    rgba(5, 38, 89, 0.1) 0%,
+    rgba(5, 38, 89, 0.03) 100%);
+  animation: rotate 25s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+
+
+/* Main circular frame */
+.circular-frame {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: 0; /* Ensure square wrapper with sharp corners */
+  z-index: 10;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Artistic frame */
-.artistic-frame {
+
+
+/* Orbital ring */
+.orbital-ring {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 4;
-  pointer-events: none;
-}
-
-/* Brush stroke border */
-.brush-stroke {
-  position: absolute;
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.85;
-  transition: all 0.3s ease;
-}
-
-.brush-top {
-  top: -15px;
-  left: 10%;
-  right: 10%;
-  height: 30px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100'%3E%3Cpath fill='%23FF9671' d='M0,50 C100,20 200,80 300,50 C400,20 500,80 600,50 C700,20 800,80 800,50 L800,0 L0,0 Z'/%3E%3C/svg%3E");
-}
-
-.brush-right {
-  top: 10%;
-  right: -15px;
-  bottom: 10%;
-  width: 30px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 800'%3E%3Cpath fill='%23052659' d='M50,0 C20,100 80,200 50,300 C20,400 80,500 50,600 C20,700 80,800 50,800 L100,800 L100,0 Z'/%3E%3C/svg%3E");
-}
-
-.brush-bottom {
-  bottom: -15px;
-  left: 10%;
-  right: 10%;
-  height: 30px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100'%3E%3Cpath fill='%23FF9671' d='M0,50 C100,80 200,20 300,50 C400,80 500,20 600,50 C700,80 800,20 800,50 L800,100 L0,100 Z'/%3E%3C/svg%3E");
-}
-
-.brush-left {
-  top: 10%;
-  left: -15px;
-  bottom: 10%;
-  width: 30px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 800'%3E%3Cpath fill='%23052659' d='M50,0 C80,100 20,200 50,300 C80,400 20,500 50,600 C80,700 20,800 50,800 L0,800 L0,0 Z'/%3E%3C/svg%3E");
-}
-
-.profile-container:hover .brush-stroke {
-  opacity: 1;
-}
-
-/* Corner decorations */
-.corner-decoration {
-  position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 380px;
+  height: 380px;
+  border: 2px solid rgba(96, 165, 250, 0.2);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbit 30s linear infinite;
   z-index: 5;
-  opacity: 0.9;
-  transition: all 0.3s ease;
 }
 
-.profile-container:hover .corner-decoration {
-  transform: scale(1.1);
-  opacity: 1;
+@keyframes orbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.corner-top-left {
-  top: 10px;
-  left: 10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='20' cy='20' r='15' fill='%23FF9671' opacity='0.7'/%3E%3C/svg%3E");
-}
 
-.corner-top-right {
-  top: 10px;
-  right: 10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='65' y='5' width='30' height='30' fill='%23052659' opacity='0.7'/%3E%3C/svg%3E");
-}
 
-.corner-bottom-left {
-  bottom: 10px;
-  left: 10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='5' y='65' width='30' height='30' fill='%23052659' opacity='0.7'/%3E%3C/svg%3E");
-}
-
-.corner-bottom-right {
-  bottom: 10px;
-  right: 10px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='80' cy='80' r='15' fill='%23FF9671' opacity='0.7'/%3E%3C/svg%3E");
-}
-
-/* Inner frame - square with sharp corners */
-.inner-frame {
+/* Orbital elements (developer/designer icons) */
+.orbital-element {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  right: 15px;
-  bottom: 15px;
-  border: 2px solid rgba(5, 38, 89, 0.3);
-  border-radius: 0; /* Ensure sharp square corners */
-  z-index: 4;
-  transition: all 0.3s ease;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 20px rgba(96, 165, 250, 0.2);
+  transition: all 0.8s ease;
+  animation: counter-orbit 30s linear infinite reverse;
+  backdrop-filter: blur(10px);
 }
 
-.profile-container:hover .inner-frame {
-  border-color: rgba(5, 38, 89, 0.5);
+@keyframes counter-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
+/* Strategic positioning around the orbital ring */
+.orbital-element-1 {
+  top: -25px;
+  right: 100px; /* Code brackets - top right */
+}
+
+.orbital-element-2 {
+  bottom: -25px;
+  left: 100px; /* Terminal - bottom left */
+}
+
+.orbital-element-3 {
+  top: 50px;
+  right: -25px; /* Paintbrush - right side */
+}
+
+.orbital-element-4 {
+  bottom: 50px;
+  left: -25px; /* Pen tool - left side */
+}
+
+.orbital-element-5 {
+  top: -25px;
+  left: 100px; /* Gear - top left */
+}
+
+.orbital-element-6 {
+  bottom: -25px;
+  right: 100px; /* Layers - bottom right */
+}
+
+/* Icon content styling */
+.icon-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.8s ease;
+}
+
+/* Developer icon styles */
+.developer-icon {
+  color: #60A5FA;
+}
+
+.code-brackets {
+  font-family: 'Courier New', monospace;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.terminal-icon {
+  font-family: 'Courier New', monospace;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.gear-icon {
+  font-size: 16px;
+}
+
+/* Designer icon styles */
+.designer-icon {
+  color: #FF9671;
+}
+
+.paintbrush-icon {
+  font-size: 16px;
+}
+
+.pen-tool-icon {
+  font-size: 16px;
+}
+
+.layers-icon {
+  font-size: 16px;
+}
+
+
+
+/* Decorative icons */
+.decorative-icon {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.8s ease;
+  animation: float-icon 4s ease-in-out infinite;
+  z-index: 6;
+}
+
+@keyframes float-icon {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(5deg); }
+}
+
+.icon-diamond {
+  top: 20px;
+  left: 60px;
+  animation-delay: 0s;
+}
+
+.icon-star {
+  top: 60px;
+  right: 20px;
+  animation-delay: 1s;
+}
+
+.icon-sparkle {
+  bottom: 60px;
+  right: 60px;
+  animation-delay: 2s;
+}
+
+.icon-scribble {
+  top: 120px;
+  left: 20px;
+  animation-delay: 3s;
+}
+
+.diamond-shape {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(45deg, #60A5FA, #FF9671);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+.star-shape {
+  font-size: 16px;
+  color: #60A5FA;
+  font-weight: bold;
+}
+
+.sparkle-shape {
+  font-size: 14px;
+}
+
+.scribble-shape {
+  font-size: 12px;
+  color: #052659;
+  font-weight: bold;
+  transform: rotate(-15deg);
+}
+
+
+
+/* Central image container */
+.central-image-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 15;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.9) 100%);
+  border: 4px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow:
+    0 10px 40px rgba(96, 165, 250, 0.2),
+    0 20px 80px rgba(5, 38, 89, 0.1),
+    inset 0 2px 0 rgba(255, 255, 255, 0.5);
+}
+
+
+
+/* Profile image styling */
 .profile-image {
   position: absolute;
   top: 0;
@@ -163,29 +313,189 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0; /* Ensure square image with sharp corners */
-  z-index: 2;
-  filter: saturate(1.05);
-  transition: all 0.5s ease;
+  z-index: 1;
+  filter: saturate(1.1) contrast(1.05) brightness(1.02);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.profile-container:hover .profile-image {
-  filter: saturate(1.15) contrast(1.05);
-}
 
-/* Artistic overlay */
-.profile-overlay {
+
+/* Image overlay */
+.image-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg,
-    rgba(255, 150, 113, 0.1) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(5, 38, 89, 0.1) 100%
-  );
-  z-index: 3;
+    rgba(96, 165, 250, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 150, 113, 0.03) 50%,
+    rgba(255, 255, 255, 0.02) 75%,
+    rgba(5, 38, 89, 0.04) 100%);
+  z-index: 2;
   pointer-events: none;
+  opacity: 0.4;
+  transition: opacity 0.8s ease;
   mix-blend-mode: soft-light;
+  border-radius: 50%;
 }
+
+
+
+/* Responsive design for orbital profile image */
+@media (max-width: 768px) {
+  .profile-container {
+    max-width: 420px;
+    height: 420px;
+    padding: 15px;
+  }
+
+  .bg-circle-1 {
+    width: 340px;
+    height: 340px;
+  }
+
+  .bg-circle-2 {
+    width: 280px;
+    height: 280px;
+  }
+
+  .bg-circle-3 {
+    width: 220px;
+    height: 220px;
+  }
+
+  .orbital-ring {
+    width: 320px;
+    height: 320px;
+  }
+
+  .central-image-container {
+    width: 160px;
+    height: 160px;
+  }
+
+  .orbital-element {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-content {
+    font-size: 14px;
+  }
+
+  .code-brackets {
+    font-size: 16px;
+  }
+
+  .terminal-icon {
+    font-size: 18px;
+  }
+
+  .gear-icon, .paintbrush-icon, .pen-tool-icon, .layers-icon {
+    font-size: 12px;
+  }
+
+  .decorative-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .diamond-shape {
+    width: 10px;
+    height: 10px;
+  }
+
+  .star-shape {
+    font-size: 14px;
+  }
+
+  .sparkle-shape {
+    font-size: 12px;
+  }
+
+  .scribble-shape {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    max-width: 360px;
+    height: 360px;
+    padding: 12px;
+  }
+
+  .bg-circle-1 {
+    width: 300px;
+    height: 300px;
+  }
+
+  .bg-circle-2 {
+    width: 240px;
+    height: 240px;
+  }
+
+  .bg-circle-3 {
+    width: 180px;
+    height: 180px;
+  }
+
+  .orbital-ring {
+    width: 280px;
+    height: 280px;
+  }
+
+  .central-image-container {
+    width: 140px;
+    height: 140px;
+  }
+
+  .orbital-element {
+    width: 35px;
+    height: 35px;
+  }
+
+  .icon-content {
+    font-size: 12px;
+  }
+
+  .code-brackets {
+    font-size: 14px;
+  }
+
+  .terminal-icon {
+    font-size: 16px;
+  }
+
+  .gear-icon, .paintbrush-icon, .pen-tool-icon, .layers-icon {
+    font-size: 10px;
+  }
+
+  .decorative-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .diamond-shape {
+    width: 8px;
+    height: 8px;
+  }
+
+  .star-shape {
+    font-size: 12px;
+  }
+
+  .sparkle-shape {
+    font-size: 10px;
+  }
+
+  .scribble-shape {
+    font-size: 8px;
+  }
+
+
+}
+
+

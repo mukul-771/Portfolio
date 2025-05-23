@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Edit, Trash2, LogOut, Save, X, Image, Camera, Globe, Star } from 'lucide-react';
 
 import type { Project, ImageSettings, GlobalImageSettings } from '../types/project';
-import { projectApi, authApi, globalSettingsApi } from '../services/jsonApi';
+import { projectApi, authApi, globalSettingsApi } from '../services/firebaseApi';
 
 import SimplifiedImageUpload from '../components/admin/SimplifiedImageUpload';
 import ImageSettingsPanel from '../components/admin/ImageSettingsPanel';
