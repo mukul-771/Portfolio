@@ -1,8 +1,31 @@
 // Consolidated Vercel API route for all authentication operations
 const allowCors = require('../_utils/cors');
-const { userOperations } = require('../_utils/database');
-const { verifyToken } = require('../_utils/auth');
 const jwt = require('jsonwebtoken');
+
+// Mock user for demo purposes (replace with Firebase later)
+const DEMO_USER = {
+  id: '1',
+  email: 'mukul.meena@iitgn.ac.in',
+  password: 'g6QtckJh', // In production, this should be hashed
+  role: 'admin'
+};
+
+function verifyToken(req) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return { error: 'No token provided' };
+  }
+
+  const token = authHeader.substring(7);
+  const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return { user: decoded };
+  } catch (error) {
+    return { error: 'Invalid token' };
+  }
+}
 
 async function handler(req, res) {
   const { method, query } = req;
@@ -17,14 +40,8 @@ async function handler(req, res) {
         return res.status(400).json({ message: 'Email and password are required' });
       }
 
-      const user = await userOperations.getByEmail(email);
-
-      if (!user) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-      }
-
-      const isValidPassword = await userOperations.verifyPassword(password, user.password);
-      if (!isValidPassword) {
+      // Check against demo user
+      if (email !== DEMO_USER.email || password !== DEMO_USER.password) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
@@ -32,9 +49,9 @@ async function handler(req, res) {
       const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
       const token = jwt.sign(
         {
-          id: user.id,
-          email: user.email,
-          role: user.role
+          id: DEMO_USER.id,
+          email: DEMO_USER.email,
+          role: DEMO_USER.role
         },
         JWT_SECRET,
         { expiresIn: '24h' }
@@ -44,9 +61,9 @@ async function handler(req, res) {
         message: 'Login successful',
         token,
         user: {
-          id: user.id,
-          email: user.email,
-          role: user.role
+          id: DEMO_USER.id,
+          email: DEMO_USER.email,
+          role: DEMO_USER.role
         }
       });
 
