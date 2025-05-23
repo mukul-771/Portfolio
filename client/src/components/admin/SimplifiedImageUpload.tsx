@@ -45,7 +45,7 @@ const SimplifiedImageUpload = ({
         const file = files[i];
         if (file.type.startsWith('image/')) {
           const response = await projectApi.uploadImage(file);
-          if (response.imageUrl) {
+          if (response?.imageUrl) {
             newImages.push(response.imageUrl);
           }
         }

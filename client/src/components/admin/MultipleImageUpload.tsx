@@ -40,7 +40,7 @@ const MultipleImageUpload = ({
       const uploadPromises = files.map(file => projectApi.uploadImage(file));
       const results = await Promise.all(uploadPromises);
 
-      const newImageUrls = results.map(result => result.imageUrl);
+      const newImageUrls = results.map(result => result?.imageUrl || '').filter(url => url);
       const updatedImages = [...images, ...newImageUrls].slice(0, maxImages);
 
       onImagesChange(updatedImages);
