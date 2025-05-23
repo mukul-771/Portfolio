@@ -14,6 +14,10 @@ app.use(cors({
   origin: [
     'http://localhost:5173',
     'http://localhost:3000',
+    // Netlify domains (will match any Netlify subdomain)
+    /https:\/\/.*\.netlify\.app$/,
+    /https:\/\/.*\.netlify\.com$/,
+    // Vercel domains (backup)
     'https://portfolio-v1-0.vercel.app',
     'https://portfolio-v1-0-git-main-mukul-771.vercel.app',
     'https://portfolio-v1-0-mukul-771.vercel.app',
