@@ -5,12 +5,15 @@
   "scripts": {
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
-    "install-all": "npm run install-client && npm run install-server",
+    "install-api": "cd api && npm install",
+    "install-all": "npm run install-client && npm run install-server && npm run install-api",
+    "build": "cd client && npm install && npm run build",
     "build-client": "cd client && npm run build",
     "start-server": "cd server && npm start",
-    "dev": "cd server && npm run dev"
+    "dev": "cd server && npm run dev",
+    "vercel-build": "cd client && npm install && npm run build"
   },
-  "keywords": ["portfolio", "react", "express", "mern"],
+  "keywords": ["portfolio", "react", "express", "mern", "vercel"],
   "author": "Mukul Meena",
   "license": "MIT"
 }

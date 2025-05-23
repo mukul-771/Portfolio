@@ -1,7 +1,7 @@
 import type { Project, GlobalImageSettings } from '../types/project';
 
-// Use proxy in development, full URL in production
-const API_URL = import.meta.env.DEV ? '/api' : (import.meta.env.VITE_API_URL || 'http://localhost:5001/api');
+// Use proxy in development, Vercel API in production
+const API_URL = import.meta.env.DEV ? '/api' : '/api';
 
 // Helper function to handle API responses
 const handleResponse = async (response: Response) => {

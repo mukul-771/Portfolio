@@ -4,7 +4,7 @@
       "id": "1",
       "title": "E-Commerce Platform",
       "description": "A full-stack e-commerce platform with user authentication, product management, and payment processing.",
-      "imageUrl": "http://localhost:5001/uploads/images/1747957985679-206543175.JPG",
+      "imageUrl": "/uploads/images/1747957985679-206543175.JPG",
       "category": "developer",
       "projectType": "web",
       "technologies": [
@@ -44,7 +44,7 @@
       "id": "3",
       "title": "Nature Photography Collection",
       "description": "A collection of nature photographs showcasing landscapes, wildlife, and macro photography.",
-      "imageUrl": "http://localhost:5001/uploads/images/1747886101230-595002564.jpg",
+      "imageUrl": "/uploads/images/1747886101230-595002564.jpg",
       "category": "designer",
       "projectType": "photography",
       "technologies": [
@@ -69,7 +69,7 @@
       "id": "4",
       "title": "Sustainable Fashion Brand Identity",
       "description": "Complete brand identity design for a sustainable fashion company.",
-      "imageUrl": "http://localhost:5001/uploads/images/1747890368355-608814368.jpg",
+      "imageUrl": "/uploads/images/1747890368355-608814368.jpg",
       "category": "designer",
       "projectType": "poster",
       "technologies": [
@@ -81,16 +81,16 @@
       "detailedDescription": "A comprehensive brand identity project for a sustainable fashion brand. The project included logo design, color palette selection, typography, and brand guidelines documentation.",
       "createdAt": "2024-01-01T16:45:00.000Z",
       "galleryImages": [
-        "http://localhost:5001/uploads/images/1747890414637-78912245.jpeg",
-        "http://localhost:5001/uploads/images/1747890449369-679924812.png",
-        "http://localhost:5001/uploads/images/1747890455194-814342081.JPG"
+        "/uploads/images/1747890414637-78912245.jpeg",
+        "/uploads/images/1747890449369-679924812.png",
+        "/uploads/images/1747890455194-814342081.JPG"
       ],
       "updatedAt": "2025-05-22T05:07:37.343Z"
     },
     {
       "title": "CoDeV",
       "description": "Project description",
-      "imageUrl": "http://localhost:5001/uploads/images/1747947162538-430383538.png",
+      "imageUrl": "/uploads/images/1747947162538-430383538.png",
       "category": "developer",
       "technologies": [
         "React",
@@ -112,7 +112,7 @@
       "overviewDescription": "sdcscnkj kj j ",
       "technicalDetails": "sdcsdcsnkljn k",
       "implementationInfo": "dcdsds kjninm",
-      "mockupImageUrl": "http://localhost:5001/uploads/images/1747892087020-858585171.JPG",
+      "mockupImageUrl": "/uploads/images/1747892087020-858585171.JPG",
       "galleryImages": [],
       "updatedAt": "2025-05-22T23:51:16.959Z",
       "thumbnailImageSettings": {
