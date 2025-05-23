@@ -1,22 +1,21 @@
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
+import {
+  collection,
+  doc,
+  getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
   limit,
-  Timestamp 
+  Timestamp
 } from 'firebase/firestore';
-import { 
-  ref, 
-  uploadBytes, 
-  getDownloadURL, 
-  deleteObject 
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
 } from 'firebase/storage';
 import { db, storage } from '../config/firebase';
 import type { Project, GlobalImageSettings } from '../types/project';
@@ -39,68 +38,71 @@ const getAuthHeaders = () => {
 // Project API calls using Firebase
 export const projectApi = {
   // Get all projects
-  getAll: async () => {
+  getAll: async (): Promise<Project[]> => {
     try {
       const projectsRef = collection(db, 'projects');
       const querySnapshot = await getDocs(query(projectsRef, orderBy('createdAt', 'desc')));
-      
+
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      }));
+      })) as Project[];
     } catch (error) {
       handleFirebaseError(error);
+      return [];
     }
   },
 
   // Get project by ID
-  getById: async (id: string) => {
+  getById: async (id: string): Promise<Project | null> => {
     try {
       const projectRef = doc(db, 'projects', id);
       const projectSnap = await getDoc(projectRef);
-      
+
       if (!projectSnap.exists()) {
-        throw new Error('Project not found');
+        return null;
       }
-      
+
       const data = projectSnap.data();
       return {
         id: projectSnap.id,
         ...data,
         createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
         updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
-      };
+      } as Project;
     } catch (error) {
       handleFirebaseError(error);
+      return null;
     }
   },
 
   // Get projects by category
-  getByCategory: async (category: string) => {
+  getByCategory: async (category: string): Promise<Project[]> => {
     try {
       const projectsRef = collection(db, 'projects');
       const q = query(
-        projectsRef, 
+        projectsRef,
         where('category', '==', category),
         orderBy('createdAt', 'desc')
       );
       const querySnapshot = await getDocs(q);
-      
+
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      }));
+      })) as Project[];
     } catch (error) {
       handleFirebaseError(error);
+      return [];
     }
   },
 
   // Get recent projects with optional limit
-  getRecent: async (limitCount: number = 6) => {
+  getRecent: async (limitCount: number = 6): Promise<Project[]> => {
     try {
       const projectsRef = collection(db, 'projects');
       const q = query(
@@ -109,20 +111,21 @@ export const projectApi = {
         limit(limitCount)
       );
       const querySnapshot = await getDocs(q);
-      
+
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      }));
+      })) as Project[];
     } catch (error) {
       handleFirebaseError(error);
+      return [];
     }
   },
 
   // Get featured projects
-  getFeatured: async () => {
+  getFeatured: async (): Promise<Project[]> => {
     try {
       const projectsRef = collection(db, 'projects');
       const q = query(
@@ -131,15 +134,16 @@ export const projectApi = {
         orderBy('createdAt', 'desc')
       );
       const querySnapshot = await getDocs(q);
-      
+
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
         updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      }));
+      })) as Project[];
     } catch (error) {
       handleFirebaseError(error);
+      return [];
     }
   },
 
@@ -148,15 +152,15 @@ export const projectApi = {
     try {
       const projectsRef = collection(db, 'projects');
       const now = Timestamp.now();
-      
+
       const projectData = {
         ...project,
         createdAt: now,
         updatedAt: now
       };
-      
+
       const docRef = await addDoc(projectsRef, projectData);
-      
+
       return {
         id: docRef.id,
         ...project,
@@ -173,18 +177,18 @@ export const projectApi = {
     try {
       const projectRef = doc(db, 'projects', id);
       const now = Timestamp.now();
-      
+
       const updateData = {
         ...project,
         updatedAt: now
       };
-      
+
       await updateDoc(projectRef, updateData);
-      
+
       // Get the updated document
       const updatedDoc = await getDoc(projectRef);
       const data = updatedDoc.data();
-      
+
       return {
         id: updatedDoc.id,
         ...data,
@@ -215,16 +219,16 @@ export const projectApi = {
       const randomString = Math.random().toString(36).substring(2);
       const fileExtension = file.name.split('.').pop();
       const fileName = `${timestamp}-${randomString}.${fileExtension}`;
-      
+
       // Create storage reference
       const storageRef = ref(storage, `project-images/${fileName}`);
-      
+
       // Upload file
       const snapshot = await uploadBytes(storageRef, file);
-      
+
       // Get download URL
       const downloadURL = await getDownloadURL(snapshot.ref);
-      
+
       return {
         imageUrl: downloadURL,
         fileName: fileName,
@@ -246,13 +250,18 @@ export const authApi = {
       },
       body: JSON.stringify({ email, password })
     });
-    
+
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Login failed');
     }
-    
+
+    // Store token in localStorage
+    if (data.token) {
+      localStorage.setItem('authToken', data.token);
+    }
+
     return data;
   },
 
@@ -262,14 +271,31 @@ export const authApi = {
       method: 'GET',
       headers
     });
-    
+
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Token verification failed');
     }
-    
+
     return data;
+  },
+
+  logout: () => {
+    localStorage.removeItem('authToken');
+  },
+
+  isAuthenticated: () => {
+    return !!localStorage.getItem('authToken');
+  },
+
+  verifyToken: async () => {
+    try {
+      await authApi.verify();
+      return true;
+    } catch {
+      return false;
+    }
   }
 };
 
@@ -279,7 +305,7 @@ export const globalSettingsApi = {
     try {
       const settingsRef = doc(db, 'settings', 'globalImageSettings');
       const settingsSnap = await getDoc(settingsRef);
-      
+
       if (!settingsSnap.exists()) {
         // Return default settings if none exist
         return {
@@ -314,7 +340,7 @@ export const globalSettingsApi = {
           }
         };
       }
-      
+
       return settingsSnap.data();
     } catch (error) {
       handleFirebaseError(error);
@@ -325,14 +351,14 @@ export const globalSettingsApi = {
     try {
       const settingsRef = doc(db, 'settings', 'globalImageSettings');
       const now = Timestamp.now();
-      
+
       const settingsData = {
         ...settings,
         updatedAt: now
       };
-      
+
       await updateDoc(settingsRef, settingsData);
-      
+
       return {
         ...settings,
         updatedAt: now.toDate().toISOString()
@@ -353,13 +379,17 @@ export const contactApi = {
       },
       body: JSON.stringify(contactData)
     });
-    
+
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to send message');
     }
-    
+
     return data;
+  },
+
+  submit: async (contactData: any) => {
+    return await contactApi.send(contactData);
   }
 };

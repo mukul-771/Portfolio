@@ -33,8 +33,8 @@ const Home = () => {
         globalSettingsApi.getImageSettings().catch(() => null) // Don't fail if settings unavailable
       ]);
 
-      setFeaturedProjects(featured);
-      setGlobalImageSettings(globalSettings);
+      setFeaturedProjects(featured || []);
+      setGlobalImageSettings(globalSettings || null);
     } catch (err: any) {
       console.error('Error fetching featured projects:', err);
       setError('Failed to load featured projects. Please try again later.');

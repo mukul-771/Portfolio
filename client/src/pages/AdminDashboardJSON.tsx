@@ -61,7 +61,7 @@ const AdminDashboard = () => {
     try {
       setIsLoading(true);
       const projectsData = await projectApi.getAll();
-      setProjects(projectsData);
+      setProjects(projectsData || []);
     } catch (error) {
       console.error('Error fetching projects:', error);
     } finally {
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
   const fetchGlobalSettings = async () => {
     try {
       const settings = await globalSettingsApi.getImageSettings();
-      setGlobalImageSettings(settings);
+      setGlobalImageSettings(settings || null);
     } catch (error) {
       console.error('Error fetching global settings:', error);
       // Set default settings if fetch fails
@@ -148,7 +148,7 @@ const AdminDashboard = () => {
     setLoginError('');
 
     try {
-      await authApi.login({ email, password });
+      await authApi.login(email, password);
       setIsAuthenticated(true);
       fetchProjects();
       fetchGlobalSettings();
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
   // Handle logout
   const handleLogout = async () => {
     try {
-      await authApi.logout();
+      authApi.logout();
       setIsAuthenticated(false);
       setEmail('');
       setPassword('');
@@ -212,13 +212,17 @@ const AdminDashboard = () => {
         // Create new project
         const { id, ...projectData } = selectedProject;
         const newProject = await projectApi.create(projectData);
-        setProjects([newProject, ...projects]);
+        if (newProject) {
+          setProjects([newProject, ...projects]);
+        }
       } else {
         // Update existing project
         const updatedProject = await projectApi.update(selectedProject.id.toString(), selectedProject);
-        setProjects(projects.map(p =>
-          p.id === updatedProject.id ? updatedProject : p
-        ));
+        if (updatedProject) {
+          setProjects(projects.map(p =>
+            p.id === updatedProject.id ? updatedProject : p
+          ));
+        }
       }
 
       setIsEditing(false);
@@ -268,15 +272,17 @@ const AdminDashboard = () => {
         featured: !project.featured
       });
 
-      setProjects(projects.map(p =>
-        p.id === updatedProject.id ? updatedProject : p
-      ));
+      if (updatedProject) {
+        setProjects(projects.map(p =>
+          p.id === updatedProject.id ? updatedProject : p
+        ));
 
-      showNotification(
-        'Project Updated!',
-        `Project ${updatedProject.featured ? 'featured' : 'unfeatured'} successfully.`,
-        'success'
-      );
+        showNotification(
+          'Project Updated!',
+          `Project ${updatedProject.featured ? 'featured' : 'unfeatured'} successfully.`,
+          'success'
+        );
+      }
     } catch (error: any) {
       console.error('Error updating project featured status:', error);
       showNotification(
@@ -371,7 +377,10 @@ const AdminDashboard = () => {
 
     try {
       const result = await projectApi.uploadImage(file);
-      const imageUrl = `http://localhost:5001${result.imageUrl}`;
+      if (!result?.imageUrl) {
+        throw new Error('Failed to get image URL from upload');
+      }
+      const imageUrl = result.imageUrl;
 
       // Update the project with the new image URL based on field name
       setSelectedProject({

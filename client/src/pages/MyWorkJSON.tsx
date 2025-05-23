@@ -49,9 +49,9 @@ const MyWork = () => {
           globalSettingsApi.getImageSettings().catch(() => null) // Don't fail if settings unavailable
         ]);
 
-        setDeveloperProjects(devProjects);
-        setDesignerProjects(desProjects);
-        setGlobalImageSettings(globalSettings);
+        setDeveloperProjects(devProjects || []);
+        setDesignerProjects(desProjects || []);
+        setGlobalImageSettings(globalSettings || null);
       } catch (err: any) {
         console.error('Error fetching data:', err);
         setError('Failed to load projects. Please try again later.');
