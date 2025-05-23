@@ -43,12 +43,15 @@ export const projectApi = {
       const projectsRef = collection(db, 'projects');
       const querySnapshot = await getDocs(query(projectsRef, orderBy('createdAt', 'desc')));
 
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-        updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      })) as Project[];
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
+        } as Project;
+      });
     } catch (error) {
       handleFirebaseError(error);
       return [];
@@ -89,12 +92,15 @@ export const projectApi = {
       );
       const querySnapshot = await getDocs(q);
 
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-        updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      })) as Project[];
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
+        } as Project;
+      });
     } catch (error) {
       handleFirebaseError(error);
       return [];
@@ -112,12 +118,15 @@ export const projectApi = {
       );
       const querySnapshot = await getDocs(q);
 
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-        updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      })) as Project[];
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
+        } as Project;
+      });
     } catch (error) {
       handleFirebaseError(error);
       return [];
@@ -135,12 +144,15 @@ export const projectApi = {
       );
       const querySnapshot = await getDocs(q);
 
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-        updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-      })) as Project[];
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+          updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
+        } as Project;
+      });
     } catch (error) {
       handleFirebaseError(error);
       return [];
@@ -148,7 +160,7 @@ export const projectApi = {
   },
 
   // Create a new project
-  create: async (project: Omit<Project, 'id'>) => {
+  create: async (project: Omit<Project, 'id'>): Promise<Project | null> => {
     try {
       const projectsRef = collection(db, 'projects');
       const now = Timestamp.now();
@@ -166,14 +178,15 @@ export const projectApi = {
         ...project,
         createdAt: now.toDate().toISOString(),
         updatedAt: now.toDate().toISOString()
-      };
+      } as Project;
     } catch (error) {
       handleFirebaseError(error);
+      return null;
     }
   },
 
   // Update a project
-  update: async (id: string, project: Partial<Project>) => {
+  update: async (id: string, project: Partial<Project>): Promise<Project | null> => {
     try {
       const projectRef = doc(db, 'projects', id);
       const now = Timestamp.now();
@@ -189,14 +202,19 @@ export const projectApi = {
       const updatedDoc = await getDoc(projectRef);
       const data = updatedDoc.data();
 
+      if (!data) {
+        return null;
+      }
+
       return {
         id: updatedDoc.id,
         ...data,
-        createdAt: data?.createdAt?.toDate?.()?.toISOString() || data?.createdAt,
-        updatedAt: data?.updatedAt?.toDate?.()?.toISOString() || data?.updatedAt
-      };
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
+      } as Project;
     } catch (error) {
       handleFirebaseError(error);
+      return null;
     }
   },
 

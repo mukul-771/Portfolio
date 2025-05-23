@@ -73,7 +73,7 @@ const AdminDashboard = () => {
   const fetchGlobalSettings = async () => {
     try {
       const settings = await globalSettingsApi.getImageSettings();
-      setGlobalImageSettings(settings || null);
+      setGlobalImageSettings(settings as GlobalImageSettings || null);
     } catch (error) {
       console.error('Error fetching global settings:', error);
       // Set default settings if fetch fails
@@ -213,14 +213,14 @@ const AdminDashboard = () => {
         const { id, ...projectData } = selectedProject;
         const newProject = await projectApi.create(projectData);
         if (newProject) {
-          setProjects([newProject, ...projects]);
+          setProjects([newProject as Project, ...projects]);
         }
       } else {
         // Update existing project
         const updatedProject = await projectApi.update(selectedProject.id.toString(), selectedProject);
         if (updatedProject) {
           setProjects(projects.map(p =>
-            p.id === updatedProject.id ? updatedProject : p
+            p.id === updatedProject.id ? updatedProject as Project : p
           ));
         }
       }
@@ -273,13 +273,14 @@ const AdminDashboard = () => {
       });
 
       if (updatedProject) {
+        const typedUpdatedProject = updatedProject as Project;
         setProjects(projects.map(p =>
-          p.id === updatedProject.id ? updatedProject : p
+          p.id === typedUpdatedProject.id ? typedUpdatedProject : p
         ));
 
         showNotification(
           'Project Updated!',
-          `Project ${updatedProject.featured ? 'featured' : 'unfeatured'} successfully.`,
+          `Project ${typedUpdatedProject.featured ? 'featured' : 'unfeatured'} successfully.`,
           'success'
         );
       }

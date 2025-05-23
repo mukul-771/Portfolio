@@ -51,7 +51,7 @@ const MyWork = () => {
 
         setDeveloperProjects(devProjects || []);
         setDesignerProjects(desProjects || []);
-        setGlobalImageSettings(globalSettings || null);
+        setGlobalImageSettings(globalSettings as GlobalImageSettings || null);
       } catch (err: any) {
         console.error('Error fetching data:', err);
         setError('Failed to load projects. Please try again later.');

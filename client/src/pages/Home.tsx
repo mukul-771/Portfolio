@@ -34,7 +34,7 @@ const Home = () => {
       ]);
 
       setFeaturedProjects(featured || []);
-      setGlobalImageSettings(globalSettings || null);
+      setGlobalImageSettings(globalSettings as GlobalImageSettings || null);
     } catch (err: any) {
       console.error('Error fetching featured projects:', err);
       setError('Failed to load featured projects. Please try again later.');
