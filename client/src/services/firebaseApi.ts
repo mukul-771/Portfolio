@@ -1,9 +1,23 @@
 import {
+  collection,
+  doc,
+  getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  Timestamp
+} from 'firebase/firestore';
+import {
   ref,
   uploadBytes,
   getDownloadURL
 } from 'firebase/storage';
-import { storage } from '../config/firebase';
+import { db, storage } from '../config/firebase';
 import type { Project, GlobalImageSettings } from '../types/project';
 
 // Helper function to handle API responses
