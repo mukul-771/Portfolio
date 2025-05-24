@@ -55,8 +55,23 @@ const ContactForm = () => {
 
     } catch (error) {
       console.error('Error submitting form:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Something went wrong');
-      setSubmitStatus('error');
+
+      // Fallback to mailto if API fails
+      const mailtoLink = `mailto:mukulmee771@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      )}`;
+
+      // Try to open email client
+      window.open(mailtoLink, '_blank');
+
+      // Show success message for mailto fallback
+      setSubmitStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -70,7 +85,11 @@ const ContactForm = () => {
           <div>
             <h4 className="font-semibold text-green-800 text-lg">Message sent successfully!</h4>
             <p className="text-green-700 mt-2">
-              Thank you for reaching out. I'll get back to you as soon as possible.
+              Thank you for reaching out. Your email client should open with your message pre-filled.
+              If it doesn't open automatically, please email me directly at{' '}
+              <a href="mailto:mukulmee771@gmail.com" className="underline font-medium">
+                mukulmee771@gmail.com
+              </a>
             </p>
           </div>
         </div>

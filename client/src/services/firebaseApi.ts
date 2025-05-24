@@ -166,31 +166,35 @@ export const projectApi = {
     }
   },
 
-  // Upload project image to Firebase Storage
+  // Upload project image via server API (with Firebase Storage backend)
   uploadImage: async (file: File) => {
     try {
-      // Create a unique filename
-      const timestamp = Date.now();
-      const randomString = Math.random().toString(36).substring(2);
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `${timestamp}-${randomString}.${fileExtension}`;
+      const headers = getAuthHeaders();
+      const formData = new FormData();
+      formData.append('image', file);
 
-      // Create storage reference
-      const storageRef = ref(storage, `project-images/${fileName}`);
+      const response = await fetch('/api/projects/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': headers.Authorization
+        },
+        body: formData
+      });
 
-      // Upload file
-      const snapshot = await uploadBytes(storageRef, file);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to upload image');
+      }
 
-      // Get download URL
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
+      const result = await response.json();
       return {
-        imageUrl: downloadURL,
-        fileName: fileName,
-        message: 'Image uploaded successfully'
+        imageUrl: result.imageUrl,
+        fileName: file.name,
+        message: result.message || 'Image uploaded successfully'
       };
     } catch (error) {
-      handleFirebaseError(error);
+      console.error('Error uploading image:', error);
+      throw error;
     }
   }
 };
