@@ -123,8 +123,7 @@ export const projectApi = {
 
       const q = query(
         projectsRef,
-        where('category', '==', category),
-        orderBy('createdAt', 'desc')
+        where('category', '==', category)
       );
       const querySnapshot = await getDocs(q);
       console.log(`🔥 Projects found for category "${category}":`, querySnapshot.docs.length);
@@ -202,11 +201,10 @@ export const projectApi = {
         });
       });
 
-      // Now query for featured projects
+      // Now query for featured projects (temporarily without orderBy until indexes are created)
       const q = query(
         projectsRef,
-        where('featured', '==', true),
-        orderBy('createdAt', 'desc')
+        where('featured', '==', true)
       );
       const querySnapshot = await getDocs(q);
       console.log('🔥 Featured projects found:', querySnapshot.docs.length);
