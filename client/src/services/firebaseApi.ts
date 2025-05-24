@@ -55,11 +55,19 @@ export const projectApi = {
   // Get all projects
   getAll: async (): Promise<Project[]> => {
     try {
-      const projectsRef = collection(db, 'projects');
-      const querySnapshot = await getDocs(query(projectsRef, orderBy('createdAt', 'desc')));
+      console.log('🔥 Fetching all projects from Firebase...');
+      console.log('🔥 Firebase db object:', db);
 
-      return querySnapshot.docs.map(doc => {
+      const projectsRef = collection(db, 'projects');
+      console.log('🔥 Projects collection reference:', projectsRef);
+
+      const querySnapshot = await getDocs(query(projectsRef, orderBy('createdAt', 'desc')));
+      console.log('🔥 Query snapshot:', querySnapshot);
+      console.log('🔥 Number of documents found:', querySnapshot.docs.length);
+
+      const projects = querySnapshot.docs.map(doc => {
         const data = doc.data();
+        console.log('🔥 Document data:', { id: doc.id, ...data });
         return {
           id: doc.id,
           ...data,
@@ -67,8 +75,17 @@ export const projectApi = {
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
         } as unknown as Project;
       });
+
+      console.log('🔥 Processed projects:', projects);
+      return projects;
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error('🚨 Error fetching projects:', error);
+      console.error('🚨 Error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
       return [];
     }
   },
@@ -177,7 +194,12 @@ export const projectApi = {
   // Create a new project
   create: async (project: Omit<Project, 'id'>): Promise<Project | null> => {
     try {
+      console.log('🔥 Starting project creation...', project);
+      console.log('🔥 Firebase db object:', db);
+
       const projectsRef = collection(db, 'projects');
+      console.log('🔥 Projects collection reference:', projectsRef);
+
       const now = Timestamp.now();
 
       const projectData = {
@@ -186,16 +208,36 @@ export const projectApi = {
         updatedAt: now
       };
 
-      const docRef = await addDoc(projectsRef, projectData);
+      console.log('🔥 Project data to save:', projectData);
 
-      return {
+      const docRef = await addDoc(projectsRef, projectData);
+      console.log('🔥 Document created with ID:', docRef.id);
+
+      const newProject = {
         id: docRef.id,
         ...project,
         createdAt: now.toDate().toISOString(),
         updatedAt: now.toDate().toISOString()
       } as unknown as Project;
+
+      console.log('🔥 Project created successfully:', newProject);
+      return newProject;
     } catch (error) {
-      console.error('Error creating project:', error);
+      console.error('🚨 Error creating project:', error);
+      console.error('🚨 Error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
+
+      // Try to provide more specific error information
+      if (error.code === 'permission-denied') {
+        console.error('🚨 Firebase permission denied - check Firestore rules');
+      } else if (error.code === 'unavailable') {
+        console.error('🚨 Firebase unavailable - check network connection');
+      }
+
       return null;
     }
   },
