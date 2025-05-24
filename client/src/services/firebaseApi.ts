@@ -116,16 +116,22 @@ export const projectApi = {
   // Get projects by category
   getByCategory: async (category: string): Promise<Project[]> => {
     try {
+      console.log(`🔥 Fetching projects by category: ${category}`);
+
       const projectsRef = collection(db, 'projects');
+      console.log('🔥 Projects collection reference:', projectsRef);
+
       const q = query(
         projectsRef,
         where('category', '==', category),
         orderBy('createdAt', 'desc')
       );
       const querySnapshot = await getDocs(q);
+      console.log(`🔥 Projects found for category "${category}":`, querySnapshot.docs.length);
 
-      return querySnapshot.docs.map(doc => {
+      const projects = querySnapshot.docs.map(doc => {
         const data = doc.data();
+        console.log(`🔥 ${category} project:`, { id: doc.id, title: data.title, category: data.category });
         return {
           id: doc.id,
           ...data,
@@ -133,8 +139,17 @@ export const projectApi = {
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
         } as unknown as Project;
       });
+
+      console.log(`🔥 Returning ${category} projects:`, projects);
+      return projects;
     } catch (error) {
-      console.error('Error fetching projects by category:', error);
+      console.error(`🚨 Error fetching projects by category ${category}:`, error);
+      console.error('🚨 Error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
       return [];
     }
   },
@@ -168,16 +183,37 @@ export const projectApi = {
   // Get featured projects
   getFeatured: async (): Promise<Project[]> => {
     try {
+      console.log('🔥 Fetching featured projects from Firebase...');
+
       const projectsRef = collection(db, 'projects');
+      console.log('🔥 Projects collection reference:', projectsRef);
+
+      // First, get all projects to see what we have
+      const allSnapshot = await getDocs(projectsRef);
+      console.log('🔥 Total projects in database:', allSnapshot.docs.length);
+
+      allSnapshot.docs.forEach(doc => {
+        const data = doc.data();
+        console.log('🔥 Project data:', {
+          id: doc.id,
+          title: data.title,
+          featured: data.featured,
+          category: data.category
+        });
+      });
+
+      // Now query for featured projects
       const q = query(
         projectsRef,
         where('featured', '==', true),
         orderBy('createdAt', 'desc')
       );
       const querySnapshot = await getDocs(q);
+      console.log('🔥 Featured projects found:', querySnapshot.docs.length);
 
-      return querySnapshot.docs.map(doc => {
+      const featuredProjects = querySnapshot.docs.map(doc => {
         const data = doc.data();
+        console.log('🔥 Featured project:', { id: doc.id, title: data.title });
         return {
           id: doc.id,
           ...data,
@@ -185,8 +221,17 @@ export const projectApi = {
           updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
         } as unknown as Project;
       });
+
+      console.log('🔥 Returning featured projects:', featuredProjects);
+      return featuredProjects;
     } catch (error) {
-      console.error('Error fetching featured projects:', error);
+      console.error('🚨 Error fetching featured projects:', error);
+      console.error('🚨 Error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
       return [];
     }
   },
