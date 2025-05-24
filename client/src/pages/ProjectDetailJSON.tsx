@@ -59,23 +59,39 @@ const ProjectDetail = () => {
 
   // Render appropriate project detail component based on project type
   const renderProjectDetail = () => {
-    if (!project) return null;
+    if (!project) {
+      console.log('🚨 No project data for rendering');
+      return null;
+    }
+
+    console.log('🔥 Rendering project detail for:', {
+      category: project.category,
+      projectType: project.projectType,
+      title: project.title
+    });
 
     if (project.category === 'developer') {
+      console.log('🔥 Rendering DeveloperProjectDetail');
       return <DeveloperProjectDetail project={project} />;
     }
 
     // For designer projects, render based on project type
+    console.log(`🔥 Rendering designer project with type: ${project.projectType}`);
     switch (project.projectType) {
       case 'photography':
+        console.log('🔥 Rendering PhotographyProjectDetail');
         return <PhotographyProjectDetail project={project} />;
       case 'production':
+        console.log('🔥 Rendering ProductionProjectDetail');
         return <ProductionProjectDetail project={project} />;
       case 'poster':
+        console.log('🔥 Rendering PosterProjectDetail');
         return <PosterProjectDetail project={project} />;
       case 'magazine':
+        console.log('🔥 Rendering MagazineProjectDetail');
         return <MagazineProjectDetail project={project} />;
       default:
+        console.log('🔥 Rendering GenericDesignerProjectDetail (default)');
         return <GenericDesignerProjectDetail project={project} />;
     }
   };

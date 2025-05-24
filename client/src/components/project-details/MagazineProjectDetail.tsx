@@ -10,9 +10,20 @@ interface MagazineProjectDetailProps {
 }
 
 const MagazineProjectDetail = ({ project }: MagazineProjectDetailProps) => {
+  console.log('🔥 MagazineProjectDetail component rendering with project:', project);
+
   // Cast to MagazineProject to access magazine-specific fields
   const magazineProject = project as MagazineProject;
   const magazineContainerRef = useRef<HTMLDivElement>(null);
+
+  console.log('🔥 Magazine project data:', {
+    title: project.title,
+    imageUrl: project.imageUrl,
+    galleryImages: project.galleryImages,
+    magazinePreviewImages: magazineProject.magazinePreviewImages,
+    fullContentUrl: magazineProject.fullContentUrl,
+    projectUrl: project.projectUrl
+  });
 
   // Animate the magazine container on mount
   useEffect(() => {
@@ -45,20 +56,22 @@ const MagazineProjectDetail = ({ project }: MagazineProjectDetailProps) => {
             </div>
 
             {/* Magazine Spreads */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {magazineProject.magazinePreviewImages.map((image, index) => (
-                <div
-                  key={index}
-                  className="magazine-spread overflow-hidden rounded-md shadow-lg transition-transform duration-300 hover:scale-105"
-                >
-                  <img
-                    src={image}
-                    alt={`${project.title} - Spread ${index + 1}`}
-                    className="w-full h-auto"
-                  />
-                </div>
-              ))}
-            </div>
+            {magazineProject.magazinePreviewImages && magazineProject.magazinePreviewImages.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                {magazineProject.magazinePreviewImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className="magazine-spread overflow-hidden rounded-md shadow-lg transition-transform duration-300 hover:scale-105"
+                  >
+                    <img
+                      src={image}
+                      alt={`${project.title} - Spread ${index + 1}`}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
