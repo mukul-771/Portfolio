@@ -85,27 +85,33 @@ const ProjectCard = ({
   return (
     <div
       ref={cardRef}
-      className={`overflow-hidden rounded-lg transition-all duration-300 relative shadow-sm hover:shadow-lg ${
-        isDarkMode ? 'bg-gray-800' : 'bg-white'
-      }`}
+      className={`overflow-hidden rounded-xl transition-all duration-300 relative shadow-md hover:shadow-2xl border ${
+        isDarkMode
+          ? 'bg-gray-800 border-gray-700 hover:border-gray-600'
+          : 'bg-white border-gray-100 hover:border-gray-200'
+      } h-full flex flex-col`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{
         transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
       }}
     >
-      <div className="relative overflow-hidden h-64">
+      <div className="relative overflow-hidden aspect-[4/3] bg-gray-100">
         <ResponsiveImage
           src={imageUrl}
           alt={title}
-          imageSettings={thumbnailImageSettings}
+          imageSettings={{
+            aspectRatio: '4:3',
+            fitBehavior: 'cover',
+            ...thumbnailImageSettings
+          }}
           globalSettings={globalImageSettings?.defaultThumbnailSettings}
-          className={`transition-transform duration-500 ${
+          className={`transition-all duration-500 ${
             isDarkMode ? 'brightness-90' : ''
           }`}
           containerClassName="h-full w-full"
           style={{
-            transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+            transform: isHovered ? 'scale(1.08)' : 'scale(1)'
           }}
           onError={() => {
             console.error('Failed to load image:', imageUrl);
@@ -121,27 +127,36 @@ const ProjectCard = ({
         </div>
       </div>
 
-      <div className="p-6">
-        <h3 className={`text-xl font-semibold mb-2 ${
-          isDarkMode ? 'text-gray-100' : 'text-gray-800'
-        }`}>{title}</h3>
-        <p className={`mb-4 text-sm ${
-          isDarkMode ? 'text-gray-300' : 'text-gray-600'
-        }`}>{description}</p>
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="flex-1">
+          <h3 className={`text-xl font-semibold mb-3 line-clamp-2 ${
+            isDarkMode ? 'text-gray-100' : 'text-gray-800'
+          }`}>{title}</h3>
+          <p className={`mb-4 text-sm leading-relaxed line-clamp-3 ${
+            isDarkMode ? 'text-gray-300' : 'text-gray-600'
+          }`}>{description}</p>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {technologies.map((tech, index) => (
-            <span
-              key={index}
-              className={`px-3 py-1 text-xs font-medium rounded-full ${
-                isDarkMode
-                  ? 'bg-gray-700 text-blue-300'
-                  : 'bg-blue-50 text-blue-600'
-              }`}
-            >
-              {tech}
-            </span>
-          ))}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {technologies.slice(0, 3).map((tech, index) => (
+              <span
+                key={index}
+                className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                  isDarkMode
+                    ? 'bg-gray-700 text-blue-300 hover:bg-gray-600'
+                    : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                }`}
+              >
+                {tech}
+              </span>
+            ))}
+            {technologies.length > 3 && (
+              <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+                isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+              }`}>
+                +{technologies.length - 3} more
+              </span>
+            )}
+          </div>
         </div>
 
         <div className={`flex space-x-3 mt-6 pt-4 ${

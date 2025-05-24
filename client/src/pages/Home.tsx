@@ -183,16 +183,26 @@ const Home = () => {
 
           {/* Projects Grid */}
           {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
               {featuredProjects.length > 0 ? (
                 featuredProjects.map((project, index) => (
-                  <FadeIn key={project.id} delay={index * 0.2} direction="up">
-                    <ProjectCard {...project} globalImageSettings={globalImageSettings || undefined} />
+                  <FadeIn key={project.id} delay={index * 0.15} direction="up">
+                    <div className="h-full">
+                      <ProjectCard {...project} globalImageSettings={globalImageSettings || undefined} />
+                    </div>
                   </FadeIn>
                 ))
               ) : (
-                <div className="col-span-3 text-center py-16">
-                  <p className="text-gray-500 text-lg">No featured projects found.</p>
+                <div className="col-span-full text-center py-20">
+                  <div className="max-w-md mx-auto">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">No Featured Projects</h3>
+                    <p className="text-gray-500">Featured projects will appear here once they're added.</p>
+                  </div>
                 </div>
               )}
             </div>
