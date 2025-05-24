@@ -93,22 +93,40 @@ export const projectApi = {
   // Get project by ID
   getById: async (id: string): Promise<Project | null> => {
     try {
+      console.log(`🔥 Fetching project by ID: ${id}`);
+
       const projectRef = doc(db, 'projects', id);
+      console.log('🔥 Project document reference:', projectRef);
+
       const projectSnap = await getDoc(projectRef);
+      console.log('🔥 Project snapshot:', projectSnap);
+      console.log('🔥 Project exists:', projectSnap.exists());
 
       if (!projectSnap.exists()) {
+        console.log('🚨 Project not found in Firebase');
         return null;
       }
 
       const data = projectSnap.data();
-      return {
+      console.log('🔥 Project data:', data);
+
+      const project = {
         id: projectSnap.id,
         ...data,
         createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
         updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt
       } as unknown as Project;
+
+      console.log('🔥 Returning project:', project);
+      return project;
     } catch (error) {
-      console.error('Error fetching project:', error);
+      console.error('🚨 Error fetching project by ID:', error);
+      console.error('🚨 Error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
       return null;
     }
   },

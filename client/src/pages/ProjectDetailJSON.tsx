@@ -21,26 +21,36 @@ const ProjectDetail = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch project details from JSON API
+    // Fetch project details from Firebase API
     const fetchProject = async () => {
-      if (!id) return;
+      if (!id) {
+        console.log('🚨 No project ID provided');
+        return;
+      }
+
+      console.log(`🔥 ProjectDetail component - fetching project with ID: ${id}`);
 
       try {
         setLoading(true);
         setError(null);
 
+        console.log('🔥 Calling projectApi.getById...');
         const projectData = await projectApi.getById(id);
+        console.log('🔥 ProjectDetail - received project data:', projectData);
 
         if (projectData) {
           setProject(projectData);
+          console.log('🔥 Project set successfully:', projectData);
         } else {
+          console.log('🚨 Project not found');
           setError('Project not found');
         }
       } catch (err: any) {
+        console.error('🚨 Error in ProjectDetail fetchProject:', err);
         setError('Failed to load project details: ' + (err.message || 'Unknown error'));
-        console.error(err);
       } finally {
         setLoading(false);
+        console.log('🔥 ProjectDetail loading finished');
       }
     };
 
